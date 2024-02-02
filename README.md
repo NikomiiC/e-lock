@@ -1,3 +1,9 @@
+# Node version 22.11.0
+
+### `npm install`
+
+To install all dependencies
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
