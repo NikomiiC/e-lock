@@ -8,6 +8,9 @@ import "bootstrap/dist/js/bootstrap.bundle.min";
 import App from './App';
 import {Provider as AuthProvider} from '../src/context/AuthContext';
 
+
+
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <AuthProvider>

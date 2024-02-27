@@ -1,17 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+
 import React, { useState, useEffect, useContext } from 'react';
 import { useIdleTimer } from 'react-idle-timer';
 import { Routes, Route } from "react-router-dom";
 
 import HomePage from "./components/Home";
-import LoginPage from "./components/Login";
+// import LoginPage from "./components/Modal/Modal";
 
 import { Context as AuthContext } from "./context/AuthContext";
 import CustomRouters from "./customRoutes/CustomRoutes";
 import history from './customRoutes/history';
 import Protected from "./customRoutes/Protected";
 import { Toast, ToastContainer } from 'react-bootstrap';
+import NavigationBar from './components/NavigationBar'
+import HeaderBanner from './components/HeaderBanner';
+import RentalBanner from './components/RentalBanner';
+import LockerInfoBanner from './components/LockerInfoBanner';
+import CTA from './components/CallToAction';
+import FAQ from './components/FAQ';
 
 
 const delay = ms => new Promise(
@@ -102,9 +107,16 @@ function App() {
   return (
       <>
         <div className="App">
-          <CustomRouters history={history}>
+          <NavigationBar/>
+          <div className='content'>
+            <HeaderBanner/>
+            <RentalBanner/>
+            <LockerInfoBanner/>
+            <CTA/>
+            <FAQ/>
+          </div>
+          {/* <CustomRouters history={history}>
             <Routes>
-              {/* <Route exact path="/" element={<ManageWorkoutPage/>}/> */}
               <Route exact path="/" element={<LoginPage />} />
               <Route
                   path="/home"
@@ -115,7 +127,7 @@ function App() {
                   }
               />
             </Routes>
-          </CustomRouters>
+          </CustomRouters> */}
           <div>
             <ShowToast className="Auth-form-container"/>
           </div>
