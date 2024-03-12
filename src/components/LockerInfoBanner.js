@@ -1,5 +1,5 @@
 import React, {useRef, useEffect, useState} from 'react';
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api'; //npm install google-maps-react
 import geocodePostalCode from './geocodePostalCode';
 import hdbjpg from '../images/void-deck.jpg'
 import malljpg from '../images/malls.jpg'
