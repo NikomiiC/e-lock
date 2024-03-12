@@ -1,25 +1,14 @@
 import React, { useContext, useState } from "react";
 import { Container } from 'react-bootstrap';
 import { Context as AuthContext } from "../context/AuthContext";
-import Modal from '../components/Modal'
+import { Routes, Route, BrowserRouter as Router, useNavigate } from "react-router-dom";
 
 
 
-function NavigationBar() {
+const NavigationBar = (props) => {
+    const navigate = useNavigate();
 
     const { signout } = useContext(AuthContext);
-
-    async function handleLogout() {
-        await signout();
-    }
-
-    const [showModal, setShowModal] = useState(false);
-
-    const openModal = () => {
-        setShowModal(true);
-        console.log(showModal);
-    };
-
 
     return (
         <div>
@@ -36,7 +25,7 @@ function NavigationBar() {
                             <li class="nav-item"><a href="#LocSection" class="nav-link">Locations</a></li>
                             <li class="nav-item"><a href="#" class="nav-link">FAQ</a></li>
                             <li style={{marginLeft: '1rem'}} class="nav-item">
-                                <button type="button" class="btn btn-warning nav-login" onClick={openModal}>
+                                <button type="button" class="btn btn-warning nav-login" onClick={() => navigate("/login")}>
                                     Login/Sign-up
                                 </button>
                             </li>
@@ -44,7 +33,6 @@ function NavigationBar() {
                     </div>
                 </Container>
             </nav>
-            <Modal showModal={showModal} />
         </div>
     );
 }
