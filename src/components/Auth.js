@@ -1,16 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { Context } from "../context/AuthContext"
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import {Button} from "react-bootstrap";
+import { Button } from "react-bootstrap";
 
 const Auth = ({ isOpen, handleCloseModal, errorMessage, onSubmit }) => {
-
+    const { state, signin, clearErrorMessage } = useContext(Context);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [radioVal, setRadioVal] = useState(true);
-    const toggleType = () => setRadioVal(!radioVal);
+    const [radioVal, setRadioVal] = useState('');
+
+    const changeSubmitType = e => {
+        setRadioVal(e.target.value);
+    }
 
     const handleEmail = event => {
         setEmail(event.target.value);
@@ -21,16 +25,14 @@ const Auth = ({ isOpen, handleCloseModal, errorMessage, onSubmit }) => {
 
     const handleSignin = async (event) => {
         event.preventDefault();
-        if (onSubmit && typeof onSubmit === 'function') {
-            onSubmit({ email, password });
-        }
+        signin({email, password});
     };
 
     const handleReg = async (event) => {
         event.preventDefault();
-        if (onSubmit && typeof onSubmit === 'function') {
-            onSubmit({ email, password });
-        }
+        // if (onSubmit && typeof onSubmit === 'function') {
+        //     onSubmit({ email, password });
+        // }
     };
 
     return (
@@ -40,7 +42,7 @@ const Auth = ({ isOpen, handleCloseModal, errorMessage, onSubmit }) => {
             </Modal.Header>
             <Modal.Body>
                 <Form>
-                    <div className="form-group mt-3">
+                    <div className="form-group mt-3" onLoad={clearErrorMessage}>
                         <Form.Group as={Row} className="mb-3" controlId="myForm.Email">
                             <Form.Label column sm="2">Email address</Form.Label>
                             <Col sm="10">
@@ -59,23 +61,25 @@ const Auth = ({ isOpen, handleCloseModal, errorMessage, onSubmit }) => {
                     </div>
                     <div className="form-group mt-3">
                         <Form.Group as={Row} className="mb-3" controlId="myForm.SignInRadio">
-                            <Col sm="4">
+                            <Col sm="6">
                                 <Form.Check
                                     required
-                                    onClick={toggleType}
-                                    type="radio"
-                                    name="typeRadio"
-                                    label="Sign In"
-                                    value={true}
+                                    type='radio'
+                                    name='typeRadio'
+                                    label="Sign Up"
+                                    value='S'
+                                    checked={radioVal === 'S'}
+                                    onChange={changeSubmitType}
                                 />
                             </Col>
-                            <Col sm="4">
+                            <Col sm="6">
                                 <Form.Check
-                                    onClick={toggleType}
                                     type="radio"
                                     name="typeRadio"
                                     label="Register"
-                                    value={false}
+                                    value="R"
+                                    checked={radioVal === 'R'}
+                                    onChange={changeSubmitType}
                                 />
                             </Col>
                         </Form.Group>
@@ -87,7 +91,11 @@ const Auth = ({ isOpen, handleCloseModal, errorMessage, onSubmit }) => {
 
             </Modal.Body>
             <Modal.Footer>
-                {radioVal ? <Button variant="primary" onClick={handleSignin}>Login</Button> : <Button variant="info" onClick={handleReg}>Register</Button>}
+                {radioVal === "S" ? (
+                    <Button variant="primary" onClick={handleSignin}>Login</Button>
+                ) : (
+                    <Button variant="info" onClick={handleReg}>Register</Button>
+                )}
             </Modal.Footer>
         </Modal>
     );
