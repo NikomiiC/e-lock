@@ -2,13 +2,18 @@ import React, { useContext, useState } from "react";
 import { Container } from 'react-bootstrap';
 import { Context as AuthContext } from "../context/AuthContext";
 import { Routes, Route, BrowserRouter as Router, useNavigate } from "react-router-dom";
-
+import Auth from "./Auth";
 
 
 const NavigationBar = (props) => {
     const navigate = useNavigate();
 
     const { signout } = useContext(AuthContext);
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const handleShowModal = () => setIsModalOpen(true);
+    const handleCloseModal = () => setIsModalOpen(false);
+
 
     return (
         <div>
@@ -25,7 +30,7 @@ const NavigationBar = (props) => {
                             <li class="nav-item"><a href="#LocSection" class="nav-link">Locations</a></li>
                             <li class="nav-item"><a href="#" class="nav-link">FAQ</a></li>
                             <li style={{marginLeft: '1rem'}} class="nav-item">
-                                <button type="button" class="btn btn-warning nav-login" onClick={() => navigate("/login")}>
+                                <button type="button" class="btn btn-warning nav-login" onClick={handleShowModal}>
                                     Login/Sign-up
                                 </button>
                             </li>
@@ -33,6 +38,7 @@ const NavigationBar = (props) => {
                     </div>
                 </Container>
             </nav>
+            <Auth isOpen={isModalOpen} handleCloseModal={handleCloseModal} />
         </div>
     );
 }
