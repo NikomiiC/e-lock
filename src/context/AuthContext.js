@@ -1,6 +1,8 @@
 import createDataContext from "./createDataContext";
 import serverAPI from "../api/serverAPI";
 import history from "../customRoutes/history";
+import { useNavigate } from "react-router-dom";
+import NavigationBar from "../components/NavigationBar";
 
 
 const authReducer = (state, action) => {
@@ -92,18 +94,29 @@ const signin = dispatch => async ({email, password}) => {
         const response = await serverAPI().post('/signin', {email, password});
         console.log("sign in : ", email);
         localStorage.setItem('token', response.data.token);
-        console.log("token: ", response.data.token);
+        // console.log("token: ", response.data.token);
         localStorage.setItem('isLoggedIn', true);
+        if (email.includes("@admin")) {
+            localStorage.setItem('userType', "ADMIN");
+        } else {
+            let username = email.split('@')[0];
+            localStorage.setItem("userName", username)
+            localStorage.setItem('userType', "USER");
+        }
         dispatch({type: 'signin', payload: response.data.token});
-        history.push('/home');
+        history.push('/');
+        if (localStorage.getItem('userType') === "USER") {
+            window.location.replace('/user-home');
+        } else {
+            alert("admin page not yet out")
+        }
 
     } catch (error) {
         dispatch({
             type: 'add_error',
             payload: 'Something went wrong with sign in'
         });
-        console.log(error);
-        //NavigateTo('/');
+        alert(error);
     }
 };
 
@@ -111,11 +124,12 @@ const signout = dispatch => async () => {
     localStorage.clear();
     dispatch({type: 'signout'});
     history.push('/');
+    window.location.replace('/');
 };
 
 
 export const {Provider, Context} = createDataContext(
     authReducer, //note: reducer
     {signin, signout, clearErrorMessage}, //note: actions
-    {token: null, errorMessage: '', isLoggedIn: false} //note: initial state
+    {token: null, errorMessage: '', isLoggedIn: false, userType: ''} //note: initial state
 );

@@ -10,7 +10,7 @@ const Auth = ({ isOpen, handleCloseModal, errorMessage, onSubmit }) => {
     const { state, signin, clearErrorMessage } = useContext(Context);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [radioVal, setRadioVal] = useState('');
+    const [radioVal, setRadioVal] = useState('S');
 
     const changeSubmitType = e => {
         setRadioVal(e.target.value);
@@ -66,7 +66,7 @@ const Auth = ({ isOpen, handleCloseModal, errorMessage, onSubmit }) => {
                                     required
                                     type='radio'
                                     name='typeRadio'
-                                    label="Sign Up"
+                                    label="Sign In"
                                     value='S'
                                     checked={radioVal === 'S'}
                                     onChange={changeSubmitType}

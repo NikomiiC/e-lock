@@ -11907,121 +11907,6 @@ h5,
   color: #D9BC83;
 }
 
-.owl-carousel.owl-drag .owl-item {
-  -ms-touch-action: pan-y;
-  touch-action: pan-y;
-}
-
-.owl-carousel {
-  position: relative;
-}
-
-.owl-carousel .owl-item {
-  opacity: .4;
-}
-
-.owl-carousel .owl-item.active {
-  opacity: 1;
-}
-
-.owl-carousel .owl-nav {
-  position: absolute;
-  top: 50%;
-  width: 100%;
-}
-
-.owl-carousel .owl-nav .owl-prev,
-.owl-carousel .owl-nav .owl-next {
-  position: absolute;
-  -webkit-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
-  margin-top: -10px;
-  color: #fd7792 !important;
-  -moz-transition: all 0.7s ease;
-  -o-transition: all 0.7s ease;
-  -webkit-transition: all 0.7s ease;
-  -ms-transition: all 0.7s ease;
-  transition: all 0.7s ease;
-  opacity: 0;
-}
-
-.owl-carousel .owl-nav .owl-prev span:before,
-.owl-carousel .owl-nav .owl-next span:before {
-  font-size: 30px;
-}
-
-.owl-carousel .owl-nav .owl-prev {
-  left: 0;
-}
-
-.owl-carousel .owl-nav .owl-next {
-  right: 0;
-}
-
-.owl-carousel .owl-dots {
-  text-align: center;
-}
-
-.owl-carousel .owl-dots .owl-dot {
-  width: 10px;
-  height: 10px;
-  margin: 5px;
-  border-radius: 50%;
-  background: #e6e6e6;
-  position: relative;
-}
-
-.owl-carousel .owl-dots .owl-dot:after {
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: 0;
-  bottom: 0;
-  width: 14px;
-  height: 14px;
-  content: '';
-  border: 1px solid #e6e6e6;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  -ms-border-radius: 50%;
-  border-radius: 50%;
-}
-
-.owl-carousel .owl-dots .owl-dot.active {
-  background: #b3b3b3;
-}
-
-.owl-carousel:hover .owl-nav .owl-prev,
-.owl-carousel:hover .owl-nav .owl-next {
-  opacity: 1;
-}
-
-.owl-carousel:hover .owl-nav .owl-prev {
-  left: -25px;
-}
-
-.owl-carousel:hover .owl-nav .owl-next {
-  right: -25px;
-}
-
-.owl-custom-nav {
-  float: right;
-  position: relative;
-  z-index: 10;
-  border: 1px solid red;
-}
-
-.owl-custom-nav .owl-custom-prev,
-.owl-custom-nav .owl-custom-next {
-  padding: 10px;
-  font-size: 30px;
-  background: #ccc;
-  line-height: 0;
-  width: 60px;
-  text-align: center;
-  display: inline-block;
-}
 
 .bg-light {
   background: #f3f4f7 !important;
@@ -12106,6 +11991,52 @@ h5,
   .ftco-services .container {
     margin-top: -200px;
   }
+}
+
+.flex-row {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px;
+}
+
+.flex-column {
+  width: 100%;
+  padding: 15px;
+  -ms-flex: 0 0 100%;
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+.col-items {
+  height: 100% !important;
+}
+
+#see-more-btn {
+  border-radius: 60px;
+  color: white;
+  background-color: #17A2B8;
+  border-color: #17A2B8;
+}
+
+#see-more-btn:hover {
+  color: black;
+}
+
+.userComponentBtnRow, .userComponentBtn {
+  height: 100%;
+  width: 100%;
+}
+
+.userComponentBtn {
+  background-color: #17A2B8 !important;
+  font-size: 1.5rem !important;
+}
+
+.userComponentBtn:hover {
+  color: black !important;
 }
 
 .services {
