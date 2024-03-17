@@ -5,10 +5,15 @@ import { Routes, Route, BrowserRouter as Router, useNavigate } from "react-route
 import Auth from "./Auth";
 
 
-const NavigationBar = (props) => {
+const NavigationBar = () => {
     const navigate = useNavigate();
 
     const { signout } = useContext(AuthContext);
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    // console.log(typeof(isLoggedIn));
+    const logout = async () => {
+        await signout();
+    }
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const handleShowModal = () => setIsModalOpen(true);
@@ -29,10 +34,14 @@ const NavigationBar = (props) => {
                             <li class="nav-item"><a href="#RentSection" class="nav-link">Rental</a></li>
                             <li class="nav-item"><a href="#LocSection" class="nav-link">Locations</a></li>
                             <li class="nav-item"><a href="#" class="nav-link">FAQ</a></li>
-                            <li style={{marginLeft: '1rem'}} class="nav-item">
-                                <button type="button" class="btn btn-warning nav-login" onClick={handleShowModal}>
-                                    Login/Sign-up
-                                </button>
+                            <li style={{ marginLeft: '1rem' }} class="nav-item">
+                                {isLoggedIn ?
+                                    <button type="button" class="btn btn-danger text-light nav-login" onClick={logout}>
+                                        Sign Out
+                                    </button>
+                                    : <button type="button" class="btn btn-warning text-light nav-login" onClick={handleShowModal}>
+                                        Login/Sign-up
+                                    </button>}
                             </li>
                         </ul>
                     </div>
