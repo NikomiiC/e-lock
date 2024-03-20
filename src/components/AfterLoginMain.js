@@ -13,12 +13,12 @@ const AfterLoginMain = ({info}) => {
 
     return(
         <>
-        <div>
+        <div className="headerComponentSpace">
             {
                 userType === "USER" ? (
-                    <h1 class="text-center text-light" style={{paddingTop: "5rem"}}>Hi, {userName}</h1>
+                    <h1 className="text-light text-center">Hi, {userName}</h1>
                 ) : (
-                    <h1 class="text-center text-light" style={{paddingTop: "5rem"}}>Hi Admin</h1>
+                    <h1 className="text-light text-center">Hi Admin</h1>
                 )
             }
         </div>
