@@ -14,7 +14,7 @@ const NavigationBar = () => {
     const logout = async () => {
         await signout();
     }
-
+    const [show, setShow] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const handleShowModal = () => setIsModalOpen(true);
     const handleCloseModal = () => setIsModalOpen(false);
@@ -25,16 +25,16 @@ const NavigationBar = () => {
             <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-light ftco-navbar-light" id="ftco-navbar">
                 <Container>
                     <a class="navbar-brand" href="index.js">eLockHub</a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+                    <button class="navbar-toggler" type="button" onClick={()=>setShow(!show)} data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="fa fa-bars"></span> Menu
                     </button>
-                    <div class="collapse navbar-collapse" id="ftco-nav">
+                    <div style={show?{display:"block"}:{display:'none'}} className="collapse navbar-collapse" id="ftco-nav">
                         <ul class="navbar-nav ml-auto">
                             <li class="nav-item active"><a href="index.html" class="nav-link">Home</a></li>
                             <li class="nav-item"><a href="#RentSection" class="nav-link">Rental</a></li>
                             <li class="nav-item"><a href="#LocSection" class="nav-link">Locations</a></li>
                             <li class="nav-item"><a href="#" class="nav-link">FAQ</a></li>
-                            <li style={{ marginLeft: '1rem' }} class="nav-item">
+                            <li id="loginBtn" class="nav-item">
                                 {isLoggedIn ?
                                     <button type="button" class="btn btn-danger text-light nav-login" onClick={logout}>
                                         Sign Out
