@@ -88,14 +88,36 @@ function roleCheck(email) {
 //     }
 // };
 
+/**
+ * backend response after signin and signup
+ * {
+ *     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWZiZmJiODFmZDZiZTVmNzNiODBiYzkiLCJpYXQiOjE3MTEwMTI3OTJ9.7ik91Dklf9EHwhowwVYVmox775FT7nhzHsMqWWA5M5g",
+ *     "user": {
+ *         "email": "test2@gmail.com",
+ *         "password": "$2b$10$eJiExxsccOKOjplJPQ/yN.Eyil6AzhASsULPdGOw5/sGZdefQLGi2",
+ *         "username": "u2",
+ *         "role": "u",
+ *         "gender": null,
+ *         "dob": null,
+ *         "feedback_list": [],
+ *         "trn_list": [],
+ *         "_id": "65fbfbb81fd6be5f73b80bc9",
+ *         "__v": 0
+ *     }
+ * }
+ * todo: remove unnecessary role check for sign in
+ */
+
 const signin = dispatch => async ({email, password}) => {
     // const navigate = useNavigate();
     try {
         const response = await serverAPI().post('/signin', {email, password});
         console.log("sign in : ", email);
         localStorage.setItem('token', response.data.token);
+        localStorage.setItem('user', response.data.user);
         // console.log("token: ", response.data.token);
         localStorage.setItem('isLoggedIn', true);
+        //todo: remove below, use user object to get role
         if (email.includes("@admin")) {
             localStorage.setItem('userType', "ADMIN");
         } else {
@@ -120,6 +142,20 @@ const signin = dispatch => async ({email, password}) => {
     }
 };
 
+const signup = dispatch => async ({ email, password, username }) => {
+    try {
+        const response = await serverAPI.post('/signup', { email, password, username });
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('user', response.data.user);
+        // console.log("token: ", response.data.token);
+        localStorage.setItem('isLoggedIn', true);
+        dispatch({ type: 'signin', payload: response.data.token }); //can re use
+        history.push('/');
+    } catch (error) {
+        dispatch({ type: 'add_error', payload: 'Something went wrong with sign up' });
+    }
+};
+
 const signout = dispatch => async () => {
     localStorage.clear();
     dispatch({type: 'signout'});
@@ -130,6 +166,6 @@ const signout = dispatch => async () => {
 
 export const {Provider, Context} = createDataContext(
     authReducer, //note: reducer
-    {signin, signout, clearErrorMessage}, //note: actions
+    {signin, signout, clearErrorMessage, signup}, //note: actions
     {token: null, errorMessage: '', isLoggedIn: false, userType: ''} //note: initial state
 );
