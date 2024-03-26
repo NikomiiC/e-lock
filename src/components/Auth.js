@@ -6,7 +6,7 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import { Button } from "react-bootstrap";
 
-const Auth = ({ isOpen, handleCloseModal, errorMessage, onSubmit }) => {
+const Auth = ({ isOpen, handleCloseModal, errorMessage }) => {
     const { state, signin, clearErrorMessage } = useContext(Context);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');

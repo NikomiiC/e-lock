@@ -8,7 +8,7 @@ import history from './customRoutes/history';
 import Protected from "./customRoutes/Protected";
 import RentLockerPage from './pages/RentLockerPage';
 import UserHomePage from './pages/UserHomePage';
-
+import FeedbackPage from './pages/FeedbackPage';
 
 
 const App = () => {
@@ -19,7 +19,8 @@ const App = () => {
         <Routes>
           <Route exact path="/" element={<Home />} />
           <Route exact path="/user-home" element={<UserHomePage />} />
-          <Route exact path="rent" element={<RentLockerPage/>} />
+          <Route exact path="rent" element={<RentLockerPage />} />
+          <Route exact path="user-feedback" element={<FeedbackPage />} />
           <Route
             path="*"
             element={<Navigate to="/" />}
