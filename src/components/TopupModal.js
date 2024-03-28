@@ -16,7 +16,7 @@ const TopupModal = ({ isOpen, handleCloseModal }) => {
                     <p>Scan or click on QR code to make payment</p>
                     <div className='my-4'>
                         <a href="https://buy.stripe.com/test_dR66qN3KH3Be2WY9AA">
-                            <Image src={qrImg} fluid />
+                            {/* <Image src={qrImg} fluid /> */}
                         </a>
                     </div>
                 </Modal.Body>

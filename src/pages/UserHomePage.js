@@ -55,22 +55,27 @@ function UserHomePage() {
         }, 1000)
     }, [])
 
-    if (userType !== "USER") {
+    if (userType === "ADMIN" && isLoggedIn === "true") {
         // let isUser = window.confirm("You are not authorised to view this page!");
         // if (isUser) {
         //     return redirect("/");
         // }
-    } else {
+        return (
+            <>
+                <h1>Hi there</h1>
+            </>
+        )
+    } else if (userType === "USER" && isLoggedIn === "true") {
         return (
             <>
 
                 <div className="UserHomeHeader">
                     <NavigationBar />
                 </div>
-                <div style={{backgroundColor: "#D9BC83", height: "100vh"}}>
+                <div style={{ backgroundColor: "#D9BC83", height: "100vh" }}>
                     <div className="MainContent">
                         <AfterLoginMain info={{ userType: userType }} />
-                        <UserMainComponents/>
+                        <UserMainComponents />
                     </div>
                 </div>
             </>

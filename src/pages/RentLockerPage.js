@@ -4,6 +4,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useIdleTimer } from 'react-idle-timer';
 import NavigationBar from "../components/NavigationBar";
 import GMaps from "../components/GMaps";
+import LockerTable from "../components/LockerTable";
 
 const delay = ms => new Promise(
     resolve => setTimeout(resolve, ms)
@@ -69,6 +70,7 @@ function RentLockerPage() {
                 <div style={{ backgroundColor: "#D9BC83", height: "100vh" }}>
                     <div className="Content">
                         <GMaps/>
+                        <LockerTable/>
                     </div>
                 </div>
             </>

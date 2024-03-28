@@ -4,15 +4,17 @@ import { useNavigate } from 'react-router-dom';
 import TopupModal from './TopupModal';
 import topUp from './topupWallet';
 
+// get value from db
 var walletValue = 0;
+
 const UserMainComponents = () => {
   const navigate = useNavigate();
   const [bookingCount, setBookingCount] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const handleTopUpModal = () => setIsModalOpen(true);
-  const handleCloseTopUpModal = () => {
-    setIsModalOpen(false);
-  };
+  // const handleTopUpModal = () => setIsModalOpen(true);
+  // const handleCloseTopUpModal = () => {
+  //   setIsModalOpen(false);
+  // };
 
   // Currently it updates value, but does not store initial value user has in store
   const refreshWallet = async () => {
@@ -20,13 +22,14 @@ const UserMainComponents = () => {
     try {
       let params = new URLSearchParams(window.location.search);
       var getTopUpVal = await topUp(params, walletValue);
-      walletValue = getTopUpVal;
-      params.delete('checkout_session_id');
+      // Set new value
+      walletValue += getTopUpVal;
 
     } catch (error) {
       const params = new URLSearchParams(window.location.search);
       params.append('error', 'true');
     }
+    // window.history.pushState({}, "Removed checkout session id", "/user-home");
   }
 
   useEffect(() => {
@@ -35,6 +38,10 @@ const UserMainComponents = () => {
 
   const moreTransactions = () => {
 
+  }
+
+  const topUpPage = () => {
+    window.location.href = "https://buy.stripe.com/test_dR66qN3KH3Be2WY9AA";
   }
 
   const toFeedback = () => {
@@ -133,7 +140,8 @@ const UserMainComponents = () => {
                     <Button className='userComponentBtn' onClick={toFeedback}>Send feedback</Button>
                   </Col>
                   <Col lg="4">
-                    <Button className='userComponentBtn' onClick={handleTopUpModal}>Top-up</Button>
+                    {/* <Button className='userComponentBtn' onClick={handleTopUpModal}>Top-up</Button> */}
+                    <Button className='userComponentBtn' onClick={topUpPage}>Top-up</Button>
                   </Col>
                   <Col lg="4">
                     <Button className='userComponentBtn' onClick={toRental}>Rent Locker</Button>
@@ -144,7 +152,7 @@ const UserMainComponents = () => {
           </Col>
         </Row>
       </Container>
-      <TopupModal isOpen={isModalOpen} handleCloseModal={handleCloseTopUpModal} />
+      {/* <TopupModal isOpen={isModalOpen} handleCloseModal={handleCloseTopUpModal} /> */}
     </>
   )
 }
