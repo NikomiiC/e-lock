@@ -4,10 +4,19 @@ import { useNavigate } from 'react-router-dom';
 import TopupModal from './TopupModal';
 import topUp from './topupWallet';
 
-// get value from db
-var walletValue = 0;
+
 
 const UserMainComponents = () => {
+  var walletValue = 0;
+  // get wallet from db
+  const retriveWalletVal = () => {
+    if (localStorage.getItem === null) {
+      walletValue = localStorage.getItem('Wallet');
+    } else {
+      walletValue = 0;
+    }
+  };
+
   const navigate = useNavigate();
   const [bookingCount, setBookingCount] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,6 +42,7 @@ const UserMainComponents = () => {
   }
 
   useEffect(() => {
+    retriveWalletVal();
     refreshWallet();
   }, [])
 
