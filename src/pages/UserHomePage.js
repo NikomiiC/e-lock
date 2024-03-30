@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, Navigate, redirect } from "react-router-dom";
 import { useIdleTimer } from 'react-idle-timer';
 import NavigationBar from "../components/NavigationBar";
-import AfterLoginMain from "../components/AfterLoginMain";
+import LoginGreeting from "../components/LoginGreeting";
 import UserMainComponents from "../components/UserMainComponents";
 
 const delay = ms => new Promise(
@@ -18,7 +18,7 @@ function UserHomePage() {
     const [lastActive, setLastActive] = useState(+new Date());
     const [isIdle, setIsIdle] = useState(false);
     const isLoggedIn = localStorage.getItem("isLoggedIn");
-    const userType = localStorage.getItem("userType");
+    const role = localStorage.getItem("role");
 
     const handleOnActive = () => setIsIdle(false);
     const handleOnIdle = () => {
@@ -55,26 +55,15 @@ function UserHomePage() {
         }, 1000)
     }, [])
 
-    if (userType === "ADMIN" && isLoggedIn === "true") {
-        // let isUser = window.confirm("You are not authorised to view this page!");
-        // if (isUser) {
-        //     return redirect("/");
-        // }
+    if (role === "u" && isLoggedIn === "true") {
         return (
             <>
-                <h1>Hi there</h1>
-            </>
-        )
-    } else if (userType === "USER" && isLoggedIn === "true") {
-        return (
-            <>
-
                 <div className="UserHomeHeader">
                     <NavigationBar />
                 </div>
                 <div style={{ backgroundColor: "#D9BC83", height: "100vh" }}>
                     <div className="MainContent">
-                        <AfterLoginMain info={{ userType: userType }} />
+                        <LoginGreeting />
                         <UserMainComponents />
                     </div>
                 </div>
