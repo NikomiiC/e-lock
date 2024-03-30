@@ -13098,3 +13098,37 @@ footer {
 .sidelink li.active a span {
   color: #fd7792;
 }
+
+.sidebar {
+  height: 100%;
+  width: 250px; /* Adjust the width as needed */
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: white;
+  padding-top: 20px;
+}
+
+.sidebar h2 {
+  text-align: center;
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  padding: 10px;
+}
+
+.sidebar ul li a {
+  text-decoration: none;
+  color: #333;
+}
+
+
+.sidebar ul li a.active {
+  background-color: #D9BC83;
+  color: #555;
+}

@@ -9,6 +9,7 @@ import Protected from "./customRoutes/Protected";
 import RentLockerPage from './pages/RentLockerPage';
 import UserHomePage from './pages/UserHomePage';
 import FeedbackPage from './pages/FeedbackPage';
+import AdminHomePage from './pages/AdminHomePage';
 
 
 const App = () => {
@@ -19,6 +20,7 @@ const App = () => {
         <Routes>
           <Route exact path="/" element={<Home />} />
           <Route exact path="/user-home" element={<UserHomePage />} />
+          <Route exact path="/admin-home" element={<AdminHomePage />} />
           <Route exact path="rent" element={<RentLockerPage />} />
           <Route exact path="user-feedback" element={<FeedbackPage />} />
           <Route
