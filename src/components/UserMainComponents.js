@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Container, Button, Table, Row, Col, Card } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import TopupModal from './TopupModal';
+// import TopupModal from './TopupModal';
 import topUp from './topupWallet';
 
 

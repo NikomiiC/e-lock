@@ -114,23 +114,15 @@ const signin = dispatch => async ({email, password}) => {
         const response = await serverAPI().post('/signin', {email, password});
         console.log("sign in : ", email);
         localStorage.setItem('token', response.data.token);
-        localStorage.setItem('user', response.data.user);
-        // console.log("token: ", response.data.token);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
         localStorage.setItem('isLoggedIn', true);
-        //todo: remove below, use user object to get role
-        if (email.includes("@admin")) {
-            localStorage.setItem('userType', "ADMIN");
-        } else {
-            let username = email.split('@')[0];
-            localStorage.setItem("userName", username)
-            localStorage.setItem('userType', "USER");
-        }
+        localStorage.setItem('role', response.data.user.role);
         dispatch({type: 'signin', payload: response.data.token});
         history.push('/');
-        if (localStorage.getItem('userType') === "USER") {
+        if (localStorage.getItem('role') === "u") {
             window.location.replace('/user-home');
-        } else {
-            alert("admin page not yet out")
+        } else if (localStorage.getItem('role') === "admin") {
+            window.location.replace('/admin-page')
         }
 
     } catch (error) {
