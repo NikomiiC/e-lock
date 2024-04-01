@@ -1,14 +1,25 @@
-import { useState, useEffect } from 'react';
-import { Container } from 'react-bootstrap';
+import { useState, useEffect, useContext, useLayoutEffect } from 'react';
+import { Container, Card, Row, Col } from 'react-bootstrap';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api'; //npm install google-maps-react
 import geocodePostalCode from './geocodePostalCode';
+import geocodeAddress from './geocodeAddress';
+import { Context as LockerContext } from '../context/LockerContext';
+
+
 
 const GMaps = () => {
     const [postalCode, setPostalCode] = useState('');
+    const [address, setAddress] = useState('');
     const [markerPosition, setMarkerPosition] = useState(null);
     const [zoomLevel, setZoomLevel] = useState(14);
     const [nearbyLocations, setNearbyLocations] = useState([]);
     const sembawangMarkerPosition = { lat: 1.4491, lng: 103.8201 };
+    // const [lockers, setLockers] = useState([]);
+
+    const {
+        state,
+        getLockers, clearErrorMessage, addLockers, deleteLockers, getLocker
+    } = useContext(LockerContext);
 
     const lockerMarkerPositions = [
         { lat: 1.4491, lng: 103.8201, name: 'Sembawang', address: 'Sembawang, Singapore' }, // To include all the lat longs of all our locker locations from db
@@ -26,11 +37,36 @@ const GMaps = () => {
         return distance.toFixed(2);
     };
 
+    // useEffect(() => {
+    //     async function getAllLockers() {
+    //         try {
+    //             const lockerData = await getLockers();
+    //             setLockers(lockerData);
+    //         } catch (err) {
+    //             console.error('Error fetching lockers:', err);
+    //         }
+    //     }
+    //     getAllLockers();
+    //     // console.log(lockers)
+    // }, []); returns empty array
+
     useEffect(() => {
+        async function getAllLockers() {
+            await getLockers()
+        }
+        console.log(getAllLockers());
+        // console.log(lockers)
     }, []);
+
     const handleSearch = async () => {
+        var coordinates = ''
         try {
-            const coordinates = await geocodePostalCode(postalCode);
+            if (address == "") {
+                coordinates = await geocodePostalCode(postalCode);
+            } else if (postalCode == "") {
+                coordinates = await geocodeAddress(address);
+            }
+
             setMarkerPosition(coordinates);
 
             if (coordinates) {
@@ -43,6 +79,8 @@ const GMaps = () => {
                 });
                 setNearbyLocations(nearbyLocationsDetails);
                 setZoomLevel(14);
+                setAddress('');
+                setPostalCode('');
             }
         } catch (error) {
             console.error('Error geocoding:', error);
@@ -51,6 +89,7 @@ const GMaps = () => {
 
     const handleUseCurrentLocation = () => {
         setPostalCode('');
+        setAddress('');
         setMarkerPosition({ lat: 0, lng: 0 });
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
@@ -69,8 +108,27 @@ const GMaps = () => {
     };
 
     const handleCardClick = (position) => {
+        console.log(position);
         setMarkerPosition(position);
     };
+
+    const disableAdd = (e) => {
+        setPostalCode(e.target.value);
+        if (postalCode == '') {
+            document.getElementById('search-box-addr').disabled = true;
+        } else {
+            document.getElementById('search-box-addr').disabled = false;
+        }
+    }
+
+    const disablePostal = (e) => {
+        setAddress(e.target.value);
+        if (address == '') {
+            document.getElementById('search-box-postal').disabled = true;
+        } else {
+            document.getElementById('search-box-postal').disabled = false;
+        }
+    }
 
     return (
         <>
@@ -78,14 +136,25 @@ const GMaps = () => {
                 <h1 className="text-light text-center">Rent Locker</h1>
                 <div className="mt-5">
                     <div className="row flex-row">
-                        <div className="col-lg-7 flex-column">
+                        <div className="col-lg-2 flex-column">
                             <input
-                                id="search-box"
+                                id="search-box-postal"
                                 type="text"
                                 className="form-control col-items"
                                 placeholder="Enter postal code"
                                 value={postalCode}
-                                onChange={(e) => setPostalCode(e.target.value)}
+                                onInput={disableAdd}
+                            />
+                        </div>
+
+                        <div className="col-lg-5 flex-column">
+                            <input
+                                id="search-box-addr"
+                                type="text"
+                                className="form-control col-items"
+                                placeholder="Enter address"
+                                value={address}
+                                onInput={disablePostal}
                             />
                         </div>
                         <div className="col-lg-2 flex-column"><button className="btn btn-info mapSearchBtn" onClick={handleSearch}>Search</button></div>
@@ -129,6 +198,20 @@ const GMaps = () => {
                     )}
                 </div>
             </Container>
+
+            {/* <Container className='headerComponentSpace'>
+                {
+                    lockers.map((locker, index) => (
+                        <Card key={index}>
+                            <Card.Body>
+                                <h5 className="card-title">{locker.status}</h5>
+                                <p className="card-text">{locker.size}</p>
+                                <p className="card-text">Distance: {locker.location_id} km</p>
+                            </Card.Body>
+                        </Card>
+                    ))
+                }
+            </Container> */}
         </>
     )
 }

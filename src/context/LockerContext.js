@@ -29,6 +29,7 @@ const getLockers = dispatch => async () => {
         if (serviceUtil.responseCodeCheck(response.data.code)) {
             //success, return array of collections
             dispatch({type: 'getLockers', payload: response.data.payload}); //type should same as the reducer case
+            console.log(response.data)
         } else {
             //fail
             dispatch({
