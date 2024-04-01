@@ -50,13 +50,7 @@ const GMaps = () => {
     //     // console.log(lockers)
     // }, []); returns empty array
 
-    useEffect(() => {
-        async function getAllLockers() {
-            await getLockers()
-        }
-        console.log(getAllLockers());
-        // console.log(lockers)
-    }, []);
+
 
     const handleSearch = async () => {
         var coordinates = ''
@@ -130,6 +124,19 @@ const GMaps = () => {
         }
     }
 
+    useEffect(() => {
+        async function getAllLockers() {
+            await getLockers()
+        }
+        getAllLockers();
+        console.log("useEffect log: " + state.result);
+
+        // console.log(lockers)
+    }, []);
+
+    if (!state.result) {
+        return <>Loading lockers...</>
+    }
     return (
         <>
             <Container className='headerComponentSpace'>
@@ -147,6 +154,13 @@ const GMaps = () => {
                             />
                         </div>
 
+                        {/*test*/}
+                        <div>
+                            {state.result ?
+
+                                <div>{state.result[0].passcode}</div> : <div></div>}
+
+                        </div>
                         <div className="col-lg-5 flex-column">
                             <input
                                 id="search-box-addr"
