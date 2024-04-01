@@ -2,11 +2,12 @@ import axios from 'axios';
 
 const GOOGLE_MAPS_API_KEY = 'AIzaSyDqFZcUp6EG_JZNoY_yvWxLDrJP67tsNRo';
 
+
 const geocodePostalCode = async (postalCode) => {
     try {
         const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=Singapore+${postalCode}&key=${GOOGLE_MAPS_API_KEY}`);
         const data = response.data;
-        console.log(response.data);
+        // console.log(response.data);
 
         if (data.status === 'OK') {
             const result = data.results[0];

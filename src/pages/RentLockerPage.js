@@ -20,7 +20,7 @@ function RentLockerPage() {
     const [lastActive, setLastActive] = useState(+new Date());
     const [isIdle, setIsIdle] = useState(false);
     const isLoggedIn = localStorage.getItem("isLoggedIn");
-    const userType = localStorage.getItem("userType");
+    const role = localStorage.getItem("role");
 
     const handleOnActive = () => setIsIdle(false);
     const handleOnIdle = () => {
@@ -57,12 +57,7 @@ function RentLockerPage() {
         }, 1000)
     }, [])
 
-    if (userType !== "USER") {
-        // let isUser = window.confirm("You are not authorised to view this page!");
-        // if (isUser) {
-        //     return redirect("/");
-        // }
-    } else {
+    if (role === "u") {
         return (
             <>
                 <div className="UserHomeHeader">
@@ -71,8 +66,6 @@ function RentLockerPage() {
                 <div style={{ backgroundColor: "#D9BC83", height: "100vh" }}>
                     <div className="Content">
                         <GMaps/>
-                        {/* <LockerTable/> */}
-                        <ManageLocker/>
                     </div>
                 </div>
             </>
