@@ -5,6 +5,7 @@ import { useIdleTimer } from 'react-idle-timer';
 import NavigationBar from "../components/NavigationBar";
 import LoginGreeting from "../components/LoginGreeting";
 import AdminMainComponents from "../components/admin/AdminMainComponents";
+import AdminDashboard from "../components/admin/AdminDashboard";
 
 const delay = ms => new Promise(
     resolve => setTimeout(resolve, ms)
@@ -63,7 +64,7 @@ function AdminHomePage() {
                 </div>
                 <div style={{ backgroundColor: "#D9BC83", height: "100vh" }}>
                     <div className="MainContent">
-                        <LoginGreeting />
+                        <AdminDashboard />
                         <AdminMainComponents />
                     </div>
                 </div>

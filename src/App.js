@@ -10,6 +10,8 @@ import RentLockerPage from './pages/RentLockerPage';
 import UserHomePage from './pages/UserHomePage';
 import FeedbackPage from './pages/FeedbackPage';
 import AdminHomePage from './pages/AdminHomePage';
+import AdminDashboard from "./components/admin/AdminDashboard";
+import AdminLockers from "./components/admin/AdminLockers";
 
 
 const App = () => {
@@ -21,6 +23,8 @@ const App = () => {
           <Route exact path="/" element={<Home />} />
           <Route exact path="/user-home" element={<UserHomePage />} />
           <Route exact path="/admin-home" element={<AdminHomePage />} />
+          <Route exact path="/admin-dashboard" element={<AdminHomePage />} />
+          <Route exact path="/admin-locker" element={<AdminLockers />} />
           <Route exact path="rent" element={<RentLockerPage />} />
           <Route exact path="user-feedback" element={<FeedbackPage />} />
           <Route
