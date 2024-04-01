@@ -1,5 +1,3 @@
-// AdminDashboard.js
-
 import React, {useState} from 'react';
 import { NavLink, Route, Routes } from 'react-router-dom';
 import LockerComponent from './AdminLockers';

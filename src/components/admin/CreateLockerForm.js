@@ -8,7 +8,6 @@ const CreateLockerForm = ({ onCreate }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Call API to create locker with the provided data
         onCreate({ status, size, locationId });
     };
 
