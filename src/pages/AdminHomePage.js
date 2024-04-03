@@ -59,12 +59,9 @@ function AdminHomePage() {
     if (role === "admin" && isLoggedIn === "true") {
         return (
             <>
-                <div className="AdminHomeHeader">
-                    <NavigationBar />
-                </div>
                 <div style={{ backgroundColor: "#D9BC83", height: "100vh" }}>
-                    <div className="MainContent">
-                        <AdminDashboard />
+                    <div>
+                        <LoginGreeting />
                         <AdminMainComponents />
                     </div>
                 </div>

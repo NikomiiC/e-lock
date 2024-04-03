@@ -17,11 +17,13 @@ const AdminLockers = () => {
         } catch (error) {
             console.error('Error deleting locker:', error);
         }
+
     };
 
 
 
     return (
+        <div className = "admin-locker">
         <Container>
             <div className="mb-3">
                 <Button variant="primary" className="mr-2" >Add Small Locker</Button>
@@ -53,6 +55,7 @@ const AdminLockers = () => {
                 </tbody>
             </Table>
         </Container>
+        </div>
     );
 };
 
