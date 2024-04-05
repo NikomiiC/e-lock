@@ -63,7 +63,7 @@ function RentLockerPage() {
                 <div className="UserHomeHeader">
                     <NavigationBar />
                 </div>
-                <div style={{ backgroundColor: "#D9BC83", height: "100vh" }}>
+                <div style={{ backgroundColor: "#D9BC83", height: "100%" }}>
                     <div className="Content">
                         <GMaps/>
                     </div>
