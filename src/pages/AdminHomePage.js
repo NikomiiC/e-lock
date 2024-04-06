@@ -5,6 +5,7 @@ import { useIdleTimer } from 'react-idle-timer';
 import NavigationBar from "../components/NavigationBar";
 import LoginGreeting from "../components/LoginGreeting";
 import AdminMainComponents from "../components/admin/AdminMainComponents";
+import AdminNavBar from "../components/admin/AdminNavBar";
 import AdminDashboard from "../components/admin/AdminDashboard";
 
 const delay = ms => new Promise(

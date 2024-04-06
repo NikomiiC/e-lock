@@ -14,11 +14,13 @@ import AdminDashboard from "./components/admin/AdminDashboard";
 import AdminLockers from "./components/admin/AdminLockers";
 import AdminMainComponents from "./components/admin/AdminMainComponents";
 import AdminTransactions from "./components/admin/AdminTransactions";
+import AdminNavBar from "./components/admin/AdminNavBar";
 const App = () => {
 
   return (
     <>
       <Router>
+        <AdminNavBar/>
         <AdminMainComponents />
         <Routes>
           <Route exact path="/" element={<Home />} />
