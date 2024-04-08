@@ -8,15 +8,17 @@ import "bootstrap/dist/js/bootstrap.bundle.min";
 import App from './App';
 import {Provider as AuthProvider} from '../src/context/AuthContext';
 import {Provider as LockerProvider} from '../src/context/LockerContext';
-
+import {Provider as LocationProvider} from '../src/context/LocationContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+    <LocationProvider>
     <LockerProvider>
         <AuthProvider>
             <App/>
         </AuthProvider>
     </LockerProvider>
+    </LocationProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function
