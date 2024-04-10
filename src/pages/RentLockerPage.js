@@ -4,8 +4,6 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useIdleTimer } from 'react-idle-timer';
 import NavigationBar from "../components/NavigationBar";
 import GMaps from "../components/GMaps";
-import LockerTable from "../components/LockerTable";
-import ManageLocker from "../components/admin/manageLocker";
 
 const delay = ms => new Promise(
     resolve => setTimeout(resolve, ms)
