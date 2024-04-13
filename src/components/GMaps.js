@@ -1,7 +1,8 @@
-import { useState, useEffect, useContext, useLayoutEffect, use } from 'react';
+import { useState, useEffect, useContext, } from 'react';
 import { Container, Card, Row, Col, Alert } from 'react-bootstrap';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api'; //npm install google-maps-react
 import geocodePostalCode from './geocodePostalCode';
+import { useNavigate } from 'react-router-dom';
 import geocodeAddress from './geocodeAddress';
 import { Context as LocationContext } from '../context/LocationContext';
 
@@ -15,6 +16,7 @@ const GMaps = () => {
     const [isSearched, setSearchBoolean] = useState(false);
     const [allLocations, setAllLocations] = useState([]);
     const [nearbyLocations, setNearbyLocations] = useState([]);
+    const navigate = useNavigate();
 
 
     const {
@@ -46,6 +48,12 @@ const GMaps = () => {
             }
         }
         setNearbyLocations(updateList);
+    }
+
+    const viewLockers = (locInfo) => {
+        localStorage.setItem('locationInfo', JSON.stringify(locInfo));
+        // console.log(localStorage.getItem('locationInfo'))
+        navigate('/locker-form');
     }
 
 
@@ -224,7 +232,7 @@ const GMaps = () => {
                                     {
                                         nearbyLocations.map((loc) => (
                                             <Col lg='4' md='6' sm='12'>
-                                                <Card key={loc._id} className="mt-3 text-center">
+                                                <Card onClick={() => {viewLockers(loc)}} key={loc._id} className="mt-3 text-center" style={{cursor: "pointer"}}>
                                                     <Card.Title className='mt-3'>{loc.formatted_address}</Card.Title>
                                                     <Card.Body>
                                                         <h5 className="card-title">{loc.postcode}</h5>

@@ -37,9 +37,11 @@ const getLocations = dispatch => async () => {
 
 const getLocationById = dispatch => async (id) => {
     try {
-        const response = await serverAPI().get('/location' + id);
+        // console.log(id);
+        const response = await serverAPI().get('/location/' + id);
         if (serviceUtil.responseCodeCheck(response.data.code)) {
             dispatch({ type: 'getLocation', payload: response.data.payload });
+            console.log(response.data.payload);
         } else {
             dispatch({
                 type: 'add_error',

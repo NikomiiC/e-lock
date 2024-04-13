@@ -2,22 +2,22 @@ import React, { useContext, useState, useEffect } from "react";
 
 const LoginGreeting = () => {
     const [isAdmin, setAdmin] = useState(false);
+    const [name, setName] = useState('')
     var role = "";
     var userInfo = "";
-    var name = "";
     const initializeDetails = () => {
         role = localStorage.getItem('role');
         if (role === "admin") {
             setAdmin(true);
+        } else if (role === "u") {
+            userInfo = JSON.parse(localStorage.getItem('user'));
+            setName(userInfo.username);
         }
-        userInfo = JSON.parse(localStorage.getItem('user'));
-        name = typeof(userInfo.username);
-        console.log(name)
     }
 
     useEffect(() => {
         initializeDetails();
-    }, [])
+    }, [name])
 
 
     return (
