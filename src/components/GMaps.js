@@ -24,9 +24,6 @@ const GMaps = () => {
         getLocations, clearErrorMessage, addLocation, deleteLocation, getLocationById, updateLocation, getLocByLonLat
     } = useContext(LocationContext);
 
-    const lockerMarkerPositions = [
-        { lat: 1.4491, lng: 103.8201, name: 'Sembawang', address: 'Sembawang, Singapore' }, // To include all the lat longs of all our locker locations from db
-    ];
     const calculateDistance = (lat1, lon1, lat2, lon2) => {
         const R = 6371;
         const dLat = (parseFloat(lat2) - parseFloat(lat1)) * (Math.PI / 180);
