@@ -61,7 +61,7 @@ function LockerFormPage() {
                 <div className="UserHomeHeader">
                     <NavigationBar />
                 </div>
-                <div style={{ backgroundColor: "#D9BC83", height: "100vh" }}>
+                <div style={{ backgroundColor: "#D9BC83", height: "100%" }}>
                     <div className="Content">
                         <LocationLockerInfo locInfo={selectedLocation}/>
                     </div>
