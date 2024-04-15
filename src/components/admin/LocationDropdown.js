@@ -19,8 +19,9 @@ const LocationDropdown = ({ onChange }) => {
     }, []);
 
     const handleLocationChange = (event) => {
+
         const selectedLocationId = event.target.value;
-        onChange(selectedLocationId); // Call the onChange prop with the selected location ID
+        onChange(selectedLocationId);
     };
 
     return (
@@ -29,7 +30,8 @@ const LocationDropdown = ({ onChange }) => {
             <Form.Control as="select" onChange={handleLocationChange}>
                 <option value="">Select a location...</option>
                 {locations.map(location => (
-                    <option key={location.id} value={location.id}>{location.formatted_address}</option>
+                    <option key={location.id} value={location.postcode}>{location.formatted_address}</option>
+
                 ))}
             </Form.Control>
         </Form.Group>

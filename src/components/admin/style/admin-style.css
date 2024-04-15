@@ -81,3 +81,18 @@
     margin-left: 250px;
     height: 100vh;
 }
+
+.admin-transaction-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.admin-transaction-table th, .admin-transaction-table td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+.admin-transaction-table th {
+    background-color: #f2f2f2;
+}

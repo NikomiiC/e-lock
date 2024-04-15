@@ -9,7 +9,8 @@ const AdminLockers = () => {
     const { state, getLockers } = useContext(LockerContext);
     const { locationState, getLocationById } = useContext(LocationContext);
     const [totalLockers, setTotalLockers] = useState(null);
-    const [showModal, setShowModal] = useState(false);
+    const [showAddModal, setShowAddModal] = useState(false);
+    const [showUpdateModal, setShowUpdateModal] = useState(false);
     const [selectedLockerId, setSelectedLockerId] = useState(null);
     const [newStatus, setNewStatus] = useState('');
     const [loading, setLoading] = useState(false);
@@ -17,6 +18,11 @@ const AdminLockers = () => {
     const [locationDetails, setLocationDetails] = useState({});
     const [newSize, setNewSize] = useState('');
     const [newLocation, setNewLocation] = useState('');
+    const [newLockerData, setNewLockerData] = useState({
+        status: 'Valid',
+        size: 'Small',
+        location_id: '65f2a247f04502db5d4eb44c'
+    });
 
     useEffect(() => {
         getLockers();
@@ -63,6 +69,7 @@ const AdminLockers = () => {
             setLoading(true);
             await deleteLockers(lockerList, locationId);
             setLoading(false);
+            fetchTotalLockers();
         }
     };
 
@@ -88,7 +95,7 @@ const AdminLockers = () => {
 
     const handleUpdate = (id) => {
         setSelectedLockerId(id);
-        setShowModal(true);
+        setShowUpdateModal(true);
     };
 
     const updateStatus = async () => {
@@ -104,7 +111,7 @@ const AdminLockers = () => {
                 }
             });
             console.log('Update status response:', response.data);
-            setShowModal(false);
+            setShowUpdateModal(false);
             getLockers();
         } catch (error) {
             setError(error.message);
@@ -120,7 +127,7 @@ const AdminLockers = () => {
             const token = localStorage.getItem('token');
             console.log('Selected Locker ID:', selectedLockerId);
             console.log('New Address:', newLocation);
-            const locationResponse = await serverAPI().get(`/location/addressName/${newLocation}`, {
+            const locationResponse = await serverAPI().get(`/location_postcode/${newLocation}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -136,14 +143,59 @@ const AdminLockers = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
-
-            setShowModal(false);
+            getLockers();
+            setShowUpdateModal(false);
         } catch (error) {
             console.error('Error updating location:', error);
             setError(error.message);
         } finally {
             setLoading(false);
         }
+    };
+
+
+    const handleAddLocker = async () => {
+        try {
+            setLoading(true);
+            console.log('Sending request to add locker:', newLockerData);
+            const response = await serverAPI().post('/create_lockers', [newLockerData]);
+            console.log('Response from server:', response.data);
+            if (response.data.code === 0) {
+                console.log('New locker added successfully:', response.data.payload);
+                // Update state with the newly added locker
+                setNewLockerData({
+                    status: 'Valid',
+                    size: '',
+                    location_id: ''
+                });
+                fetchTotalLockers();
+                getLockers();
+                setShowAddModal(false);
+                setLoading(false);
+            } else {
+                console.error('Failed to add locker:', response.data.msg);
+                setError(response.data.msg);
+                setLoading(false);
+            }
+        } catch (error) {
+            console.error('Error adding new locker:', error);
+            if (error.response) {
+                console.error('Response data:', error.response.data);
+                console.error('Response status:', error.response.status);
+                console.error('Response headers:', error.response.headers);
+            } else if (error.request) {
+                console.error('Request:', error.request);
+            } else {
+                console.error('Error:', error.message);
+            }
+            setLoading(false);
+        }
+    };
+
+
+    const handleLocationChange = (selectedLocationId) => {
+        console.log('Selected Location2 ID:', selectedLocationId);
+        setNewLocation(selectedLocationId);
     };
 
 
@@ -157,7 +209,7 @@ const AdminLockers = () => {
                     ) : (
                         <p>Loading...</p>
                     )}
-                    <Button variant="primary" className="mr-2">Add Small Locker</Button>
+                    <Button variant="primary" className="mr-2" onClick={() => setShowAddModal(true)}>Add Locker</Button>
                 </div>
                 <Row xs={1} md={3} className="g-4">
                     {state.result && state.result.map(locker => (
@@ -178,8 +230,29 @@ const AdminLockers = () => {
                     ))}
                 </Row>
             </Container>
-
-            <Modal show={showModal} onHide={() => setShowModal(false)}>
+            <Modal show={showAddModal} onHide={() => setShowAddModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Add New Locker</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <Form.Group controlId="statusSelect">
+                            <Form.Label>Status:</Form.Label>
+                            <Form.Control as="select" value={newLockerData.status} onChange={(e) => setNewLockerData({...newLockerData, status: e.target.value})}>
+                                <option value="Valid">Valid</option>
+                                <option value="Occupied">Occupied</option>
+                            </Form.Control>
+                        </Form.Group>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowAddModal(false)}>Close</Button>
+                    <Button variant="primary" onClick={handleAddLocker} disabled={loading}>
+                        {loading ? 'Adding...' : 'Add Locker'}
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+            <Modal show={showUpdateModal} onHide={() => setShowUpdateModal(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Update Locker</Modal.Title>
                 </Modal.Header>
@@ -193,12 +266,12 @@ const AdminLockers = () => {
                     </Form.Group>
                     <Form.Group controlId="locationSelect">
                         <Form.Label>Location:</Form.Label>
-                        <LocationDropdown onChange={(handleLocationChange) => setNewLocation(handleLocationChange)} />
+                        <LocationDropdown onChange={handleLocationChange}/>
                     </Form.Group>
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowModal(false)}>Close</Button>
+                    <Button variant="secondary" onClick={() => setShowUpdateModal(false)}>Close</Button>
                     <Button variant="primary" onClick={updateStatus} disabled={loading}>
                         {loading ? 'Updating...' : 'Update Status'}
                     </Button>

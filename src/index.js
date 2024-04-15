@@ -9,9 +9,11 @@ import App from './App';
 import {Provider as AuthProvider} from '../src/context/AuthContext';
 import {Provider as LockerProvider} from '../src/context/LockerContext';
 import {Provider as LocationProvider} from '../src/context/LocationContext';
+import {Provider as TransactionProvider} from '../src/context/TransactionContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+    <TransactionProvider>
     <LocationProvider>
     <LockerProvider>
         <AuthProvider>
@@ -19,6 +21,7 @@ root.render(
         </AuthProvider>
     </LockerProvider>
     </LocationProvider>
+    </TransactionProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function
