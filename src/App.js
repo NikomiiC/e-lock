@@ -13,14 +13,13 @@ import AdminHomePage from './pages/AdminHomePage';
 import AdminDashboard from "./components/admin/AdminDashboard";
 import AdminLockers from "./components/admin/AdminLockers";
 import AdminMainComponents from "./components/admin/AdminMainComponents";
-import AdminTransactions from "./components/admin/AdminTransactions";
 import AdminNavBar from "./components/admin/AdminNavBar";
 const App = () => {
 
   return (
     <>
       <Router>
-        <AdminNavBar/>
+
         <AdminMainComponents />
         <Routes>
           <Route exact path="/" element={<Home />} />
@@ -30,7 +29,6 @@ const App = () => {
           <Route exact path="user-feedback" element={<FeedbackPage />} />
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/admin-locker" element={<AdminLockers />} />
-          <Route path="/admin-transactions" element={<AdminTransactions/>} />
           <Route
             path="*"
             element={<Navigate to="/" />}

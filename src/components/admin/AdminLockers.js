@@ -4,6 +4,7 @@ import serverAPI from "../../api/serverAPI";
 import { Context as LockerContext } from '../../context/LockerContext';
 import { Context as LocationContext } from '../../context/LocationContext';
 import LocationDropdown from '../admin/LocationDropdown';
+import AdminNavBar from "./AdminNavBar";
 
 const AdminLockers = () => {
     const { state, getLockers } = useContext(LockerContext);
@@ -12,7 +13,7 @@ const AdminLockers = () => {
     const [showAddModal, setShowAddModal] = useState(false);
     const [showUpdateModal, setShowUpdateModal] = useState(false);
     const [selectedLockerId, setSelectedLockerId] = useState(null);
-    const [newStatus, setNewStatus] = useState('');
+    const [newStatus, setNewStatus] = useState('Valid');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [locationDetails, setLocationDetails] = useState({});
@@ -21,7 +22,7 @@ const AdminLockers = () => {
     const [newLockerData, setNewLockerData] = useState({
         status: 'Valid',
         size: 'Small',
-        location_id: '65f2a247f04502db5d4eb44c'
+        location_id: ''
     });
 
     useEffect(() => {
@@ -193,13 +194,37 @@ const AdminLockers = () => {
     };
 
 
-    const handleLocationChange = (selectedLocationId) => {
-        console.log('Selected Location2 ID:', selectedLocationId);
-        setNewLocation(selectedLocationId);
+    const handleLocationChange = async (selectedPostalCode) => {
+        try {
+            setLoading(true);
+            const token = localStorage.getItem('token');
+            const locationResponse = await serverAPI().get(`/location_postcode/${selectedPostalCode}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            const locationData = locationResponse.data.payload[0];
+            const selectedLocationId = locationData._id;
+            console.log('Selected Location ID:', selectedLocationId);
+            setNewLocation(selectedPostalCode);
+            setNewLockerData(prevData => ({
+                ...prevData,
+                location_id: selectedLocationId
+            }));
+        } catch (error) {
+            console.error('Error fetching location details:', error);
+        } finally {
+            setLoading(false);
+        }
     };
 
 
     return (
+        <>
+            <div>
+                <AdminNavBar/>
+            </div>
+
         <div className="admin-locker">
             <Container>
                 <div className="mb-3">
@@ -220,7 +245,7 @@ const AdminLockers = () => {
                                     <Card.Text>Status: {locker.status}</Card.Text>
                                     <Card.Text>Size: {locker.size}</Card.Text>
                                     <Card.Text>
-                                        Location: {locationDetails[locker.location_id] ? locationDetails[locker.location_id] : "N/A"}
+                                        Location: {locationDetails[locker.location_id]}
                                     </Card.Text>
                                     <Button variant="info" onClick={() => handleUpdate(locker._id)}>Update</Button>
                                     <Button variant="danger" onClick={() => handleDelete([locker._id], locker.location_id)}>Delete</Button>
@@ -242,6 +267,18 @@ const AdminLockers = () => {
                                 <option value="Valid">Valid</option>
                                 <option value="Occupied">Occupied</option>
                             </Form.Control>
+                        </Form.Group>
+                        <Form.Group controlId="sizeSelect">
+                            <Form.Label>Size:</Form.Label>
+                            <Form.Control as="select" value={newLockerData.size} onChange={(e) => setNewLockerData({...newLockerData, size: e.target.value})}>
+                                <option value="Small">Small</option>
+                                <option value="Medium">Medium</option>
+                                <option value="Large">Large</option>
+                            </Form.Control>
+                        </Form.Group>
+                        <Form.Group controlId="locationSelect">
+                            <Form.Label>Location:</Form.Label>
+                            <LocationDropdown onChange={handleLocationChange}/>
                         </Form.Group>
                     </Form>
                 </Modal.Body>
@@ -281,7 +318,7 @@ const AdminLockers = () => {
                 </Modal.Footer>
             </Modal>
         </div>
-
+        </>
     );
 };
 

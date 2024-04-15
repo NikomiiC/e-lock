@@ -10,6 +10,7 @@ import UserHomePage from "../../pages/UserHomePage";
 import { Link } from 'react-router-dom';
 import './style/admin-style.css';
 import AdminLockers from "./AdminLockers";
+import AdminNavBar from "./AdminNavBar";
 
 
 
@@ -26,9 +27,7 @@ const AdminMainComponents = () => {
                         <li className="nav-item">
                             <NavLink to="/admin-locker" className="nav-link">Lockers</NavLink>
                         </li>
-                        <li className="nav-item">
-                            <NavLink to="/admin-transactions" className="nav-link">Transactions</NavLink>
-                        </li>
+
                     </ul>
                 </Container>
             </nav>

@@ -60,12 +60,19 @@ function AdminHomePage() {
     if (role === "admin" && isLoggedIn === "true") {
         return (
             <>
+                <div>
+                    <AdminNavBar/>
+                </div>
+                <div>
+                    <AdminMainComponents/>
+                </div>
                 <div style={{ backgroundColor: "#D9BC83", height: "100vh" }}>
                     <div>
                         <LoginGreeting />
-                        <AdminMainComponents />
+
                     </div>
                 </div>
+
             </>
         );
     }

@@ -3,6 +3,7 @@ import './style/admin-style.css';
 import { Context as TransactionContext } from '../../context/TransactionContext';
 import serverAPI from "../../api/serverAPI";
 import { Context as LockerContext } from '../../context/LockerContext';
+import AdminNavBar from "./AdminNavBar";
 
 const AdminDashboard = () => {
     const { state, getTransaction } = useContext(TransactionContext);
@@ -87,6 +88,10 @@ const AdminDashboard = () => {
     };
 
     return (
+        <>
+            <div>
+                <AdminNavBar/>
+            </div>
         <div className="admin-dashboard">
             <h2>Admin Dashboard</h2>
             <div className="card">
@@ -127,6 +132,7 @@ const AdminDashboard = () => {
                 )}
             </div>
         </div>
+        </>
     );
 };
 
