@@ -78,11 +78,11 @@ const AdminLockers = () => {
                 }
             });
             console.log('Delete lockers response:', response.data);
-            // Refresh locker data or perform any other necessary actions after deletion
+
             getLockers();
         } catch (error) {
             console.error('Error deleting lockers:', error);
-            // Handle error
+
         }
     };
 
@@ -104,7 +104,6 @@ const AdminLockers = () => {
                 }
             });
             console.log('Update status response:', response.data);
-            // Close modal and refresh locker data
             setShowModal(false);
             getLockers();
         } catch (error) {
@@ -121,17 +120,15 @@ const AdminLockers = () => {
             const token = localStorage.getItem('token');
             console.log('Selected Locker ID:', selectedLockerId);
             console.log('New Address:', newLocation);
-            const locationResponse = await serverAPI().get(`/location_postcode/${newLocation}`, {
-                addressName: newLocation
-            }, {
+            const locationResponse = await serverAPI().get(`/location/addressName/${newLocation}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
             console.log('Location response:', locationResponse.data);
+
             const newLocationId = locationResponse.data.payload[0]._id;
             console.log('New Location ID:', newLocationId);
-
             await serverAPI().post(`locker/update_location/${selectedLockerId}`, {
                 location_id: newLocationId,
             }, {
@@ -148,6 +145,7 @@ const AdminLockers = () => {
             setLoading(false);
         }
     };
+
 
     return (
         <div className="admin-locker">
@@ -198,6 +196,7 @@ const AdminLockers = () => {
                         <LocationDropdown onChange={(handleLocationChange) => setNewLocation(handleLocationChange)} />
                     </Form.Group>
                 </Modal.Body>
+
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setShowModal(false)}>Close</Button>
                     <Button variant="primary" onClick={updateStatus} disabled={loading}>
@@ -209,6 +208,7 @@ const AdminLockers = () => {
                 </Modal.Footer>
             </Modal>
         </div>
+
     );
 };
 
