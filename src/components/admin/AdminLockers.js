@@ -7,7 +7,7 @@ import LocationDropdown from '../admin/LocationDropdown';
 import AdminNavBar from "./AdminNavBar";
 
 const AdminLockers = () => {
-    const { state, getLockers } = useContext(LockerContext);
+    const { state, getLockers} = useContext(LockerContext);
     const { locationState, getLocationById } = useContext(LocationContext);
     const [totalLockers, setTotalLockers] = useState(null);
     const [showAddModal, setShowAddModal] = useState(false);
@@ -68,7 +68,33 @@ const AdminLockers = () => {
     const handleDelete = async (lockerList, locationId) => {
         if (window.confirm(`Are you sure you want to delete these lockers?`)) {
             setLoading(true);
-            await deleteLockers(lockerList, locationId);
+            const validLockerList = [];
+            for (const lockerId of lockerList) {
+                try {
+                    const token = localStorage.getItem('token');
+                    const response = await serverAPI().get(`/locker/${lockerId}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
+                    const lockerInfo = response.data.payload;
+                    console.log(`LockerInfo:`,lockerInfo.locker.status);
+                    const lockerStatus = lockerInfo.locker.status;
+                    if (lockerStatus === 'Valid') {
+                        validLockerList.push(lockerId);
+                    }
+                } catch (error) {
+                    console.error(`Error fetching locker information for locker ID ${lockerId}:`, error);
+                }
+            }
+
+            if (validLockerList.length > 0) {
+                await deleteLockers(validLockerList, locationId);
+            } else {
+                console.log('No valid lockers to delete.');
+                alert('Cannot delete. No valid lockers found.');
+            }
+
             setLoading(false);
             fetchTotalLockers();
         }
