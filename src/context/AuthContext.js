@@ -122,7 +122,7 @@ const signin = dispatch => async ({email, password}) => {
         if (localStorage.getItem('role') === "u") {
             window.location.replace('/user-home');
         } else if (localStorage.getItem('role') === "admin") {
-            window.location.replace('/admin-page')
+            window.location.replace('/admin-home')
         }
 
     } catch (error) {
