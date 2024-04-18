@@ -27,7 +27,9 @@ const AdminMainComponents = () => {
                         <li className="nav-item">
                             <NavLink to="/admin-locker" className="nav-link">Lockers</NavLink>
                         </li>
-
+                        <li className="nav-item">
+                            <NavLink to="/admin-location" className="nav-link">Locations</NavLink>
+                        </li>
                     </ul>
                 </Container>
             </nav>

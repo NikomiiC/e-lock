@@ -12,6 +12,7 @@ import FeedbackPage from './pages/FeedbackPage';
 import AdminHomePage from './pages/AdminHomePage';
 import AdminDashboard from "./components/admin/AdminDashboard";
 import AdminLockers from "./components/admin/AdminLockers";
+import AdminLocations from "./components/admin/AdminLocations"
 import AdminMainComponents from "./components/admin/AdminMainComponents";
 import AdminNavBar from "./components/admin/AdminNavBar";
 const App = () => {
@@ -29,6 +30,7 @@ const App = () => {
           <Route exact path="user-feedback" element={<FeedbackPage />} />
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/admin-locker" element={<AdminLockers />} />
+          <Route path="/admin-location" element={<AdminLocations />} />
           <Route
             path="*"
             element={<Navigate to="/" />}

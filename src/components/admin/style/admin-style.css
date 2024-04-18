@@ -96,3 +96,17 @@
 .admin-transaction-table th {
     background-color: #f2f2f2;
 }
+.admin-location-table {
+    margin: 0 auto;
+    width: 60%;
+}
+
+.admin-location-table th, .admin-location-table td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+.admin-location-table th {
+    background-color: #f2f2f2;
+}
