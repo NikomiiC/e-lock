@@ -6,12 +6,6 @@ const lockerReducer = (state, action) => { //todo: to interact with components, 
     switch (action.type) {
         case 'getLockers':
             return {errorMessage: '', result: action.payload};
-        case 'getLocker':
-            return {errorMessage: '', result: action.payload};
-        case 'addLockers':
-            return {errorMessage: '', result: action.payload};
-        case 'deleteLockers':
-            return {errorMessage: '', result: action.payload};
         case 'add_error':
             return {...state, errorMessage: action.payload};
         case 'clear_error_message':
@@ -45,17 +39,18 @@ const getLockers = dispatch => async () => {
     }
 };
 
-const getLocker = dispatch => async (id) => {
+const getLockerById = dispatch => async (id) => {
     try {
-        const response = await serverAPI().get('/locker' + id);
+        const response = await serverAPI().get('/locker/' + id);
         if (serviceUtil.responseCodeCheck(response.data.code)) {
-            //success, return array of collections
-            dispatch({type: 'getLocker', payload: response.data.payload}); //can reuse type 'getLockers' as their return object is the same, so no need to create multi cases we can always reuse
+            // dispatch({type: 'getLockers', payload: response.data.payload});
+            // console.log(response.data.payload);
+            return {payload: response.data.payload}
         } else {
             //fail
             dispatch({
                 type: 'add_error',
-                payload: response.data.msg + response.data.payload //depends on backend, some fail call will return payload. Keep it in this form first
+                payload: response.data.msg + response.data.payload 
             });
         }
     } catch (err) {
@@ -120,6 +115,6 @@ const deleteLockers = dispatch => async (document) => {
 
 export const {Provider, Context} = createDataContext(
     lockerReducer, //reducer
-    {getLockers, clearErrorMessage, addLockers, deleteLockers, getLocker}, //todo: actions, implement functions and add to exports function name
+    {getLockers, clearErrorMessage, addLockers, deleteLockers, getLockerById}, //todo: actions, implement functions and add to exports function name
     {errorMessage: '', result: null} // initial state
 );

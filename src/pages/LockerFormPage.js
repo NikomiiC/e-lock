@@ -1,16 +1,15 @@
 import { Context as AuthContext } from "../context/AuthContext";
 import React, { useState, useEffect, useContext } from 'react';
-// import { useNavigate, Navigate, redirect } from "react-router-dom";
 import { useIdleTimer } from 'react-idle-timer';
 import NavigationBar from "../components/NavigationBar";
-import GMaps from "../components/GMaps";
+import LocationLockerInfo from '../components/LocationLockerInfo';
 
 const delay = ms => new Promise(
     resolve => setTimeout(resolve, ms)
 );
 
 
-function RentLockerPage() {
+function LockerFormPage() {
     const { signout } = useContext(AuthContext);
     const timeout = 15 * 60 * 1000; //15mins
     const [remaining, setRemaining] = useState(timeout);
@@ -19,6 +18,7 @@ function RentLockerPage() {
     const [isIdle, setIsIdle] = useState(false);
     const isLoggedIn = localStorage.getItem("isLoggedIn");
     const role = localStorage.getItem("role");
+    const selectedLocation = localStorage.getItem('locationInfo')
 
     const handleOnActive = () => setIsIdle(false);
     const handleOnIdle = () => {
@@ -63,7 +63,7 @@ function RentLockerPage() {
                 </div>
                 <div style={{ backgroundColor: "#D9BC83", height: "100%" }}>
                     <div className="Content">
-                        <GMaps/>
+                        <LocationLockerInfo locInfo={selectedLocation}/>
                     </div>
                 </div>
             </>
@@ -71,4 +71,4 @@ function RentLockerPage() {
     }
 }
 
-export default RentLockerPage;
+export default LockerFormPage;

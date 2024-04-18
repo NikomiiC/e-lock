@@ -7,6 +7,7 @@ const locationReducer = (locationState, action) => {
         case 'getLocations':
             return { errorMessage: '', result: action.payload };
         case 'add_error':
+
             return { ...locationState, errorMessage: action.payload };
         case 'clear_error_message':
             return { ...locationState, errorMessage: '' };
@@ -34,6 +35,7 @@ const getLocations = dispatch => async () => {
         });
     }
 };
+
 const getLocationById = dispatch => async (id) => {
     try {
         const response = await serverAPI().get(`/location/${id}`);
@@ -140,3 +142,4 @@ export const { Provider, Context } = createDataContext(
     { getLocations, clearErrorMessage, addLocation, deleteLocation, getLocationById, updateLocation, getLocByLonLat }, //todo: actions, implement functions and add to exports function name
     { errorMessage: '', result: null } // initial state
 );
+
