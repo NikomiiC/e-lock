@@ -87,51 +87,68 @@ const AdminDashboard = () => {
         setTotalSales(total);
     };
 
+    const exportToCsv = () => {
+        const csvContent = "data:text/csv;charset=utf-8,"
+            + "Transaction ID,User ID,Location,Status,Cost,Start Date,End Date\n"
+            + state.result.map(transaction =>
+                `${transaction._id},${transaction.user_id},${locationDetails[transaction.locker_id] || "N/A"},${transaction.status},${transaction.cost},${formatDate(transaction.start_date)},${formatDate(transaction.end_date)}`
+            ).join("\n");
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "transactions.csv");
+        document.body.appendChild(link);
+        link.click();
+    };
+
     return (
         <>
             <div>
                 <AdminNavBar/>
             </div>
-        <div className="admin-dashboard">
-            <h2>Admin Dashboard</h2>
-            <div className="card">
-                <h3>Total Sales for Complete Transactions</h3>
-                <p>{totalSales}</p>
+            <div className="admin-dashboard">
+                <h2>Admin Dashboard</h2>
+                <div className="card">
+                    <h3>Total Sales for Complete Transactions</h3>
+                    <p>{totalSales}</p>
+                </div>
+                <div>
+                    <h3>Transaction Details</h3>
+                    {loading ? (
+                        <p>Loading...</p>
+                    ) : (
+                        <>
+                            <button onClick={exportToCsv}>Export to CSV</button>
+                            <table className="admin-transaction-table">
+                                <thead>
+                                <tr>
+                                    <th>Transaction ID</th>
+                                    <th>User ID</th>
+                                    <th>Location</th>
+                                    <th>Status</th>
+                                    <th>Cost</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {state.result && state.result.map(transaction => (
+                                    <tr key={transaction._id}>
+                                        <td>{transaction._id}</td>
+                                        <td>{transaction.user_id}</td>
+                                        <td>{locationDetails[transaction.locker_id] || "N/A"}</td>
+                                        <td>{transaction.status}</td>
+                                        <td>{transaction.cost}</td>
+                                        <td>{formatDate(transaction.start_date)}</td>
+                                        <td>{formatDate(transaction.end_date)}</td>
+                                    </tr>
+                                ))}
+                                </tbody>
+                            </table>
+                        </>
+                    )}
+                </div>
             </div>
-            <div>
-                <h3>Transaction Details</h3>
-                {loading ? (
-                    <p>Loading...</p>
-                ) : (
-                    <table className="admin-transaction-table">
-                        <thead>
-                        <tr>
-                            <th>Transaction ID</th>
-                            <th>User ID</th>
-                            <th>Location</th>
-                            <th>Status</th>
-                            <th>Cost</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {state.result && state.result.map(transaction => (
-                            <tr key={transaction._id}>
-                                <td>{transaction._id}</td>
-                                <td>{transaction.user_id}</td>
-                                <td>{locationDetails[transaction.locker_id] || "N/A"}</td>
-                                <td>{transaction.status}</td>
-                                <td>{transaction.cost}</td>
-                                <td>{formatDate(transaction.start_date)}</td>
-                                <td>{formatDate(transaction.end_date)}</td>
-                            </tr>
-                        ))}
-                        </tbody>
-                    </table>
-                )}
-            </div>
-        </div>
         </>
     );
 };
