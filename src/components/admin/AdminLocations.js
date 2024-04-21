@@ -3,6 +3,7 @@ import { Context as LocationContext } from "../../context/LocationContext";
 import { Button, Modal, Form, Table } from "react-bootstrap";
 import serverAPI from "../../api/serverAPI";
 import AdminNavBar from "./AdminNavBar";
+import AdminMainComponents from "./AdminMainComponents";
 
 const AdminLocations = () => {
     const { state, getLocations } = useContext(LocationContext);
@@ -168,6 +169,9 @@ const AdminLocations = () => {
         <div style={{ backgroundColor: "#D9BC83", minHeight: "100vh"}}>
             <div>
                 <AdminNavBar/>
+            </div>
+            <div>
+                <AdminMainComponents/>
             </div>
             <div style={{ textAlign: "center" }}>
                 <h3>Location Details</h3>

@@ -4,6 +4,7 @@ import { Context as TransactionContext } from '../../context/TransactionContext'
 import serverAPI from "../../api/serverAPI";
 import { Context as LockerContext } from '../../context/LockerContext';
 import AdminNavBar from "./AdminNavBar";
+import AdminMainComponents from "./AdminMainComponents";
 
 const AdminDashboard = () => {
     const { state, getTransaction } = useContext(TransactionContext);
@@ -105,6 +106,9 @@ const AdminDashboard = () => {
         <>
             <div>
                 <AdminNavBar/>
+            </div>
+            <div>
+                <AdminMainComponents/>
             </div>
             <div className="admin-dashboard">
                 <h2>Admin Dashboard</h2>
