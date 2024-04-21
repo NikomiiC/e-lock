@@ -30,12 +30,12 @@ const App = () => {
           <Route exact path="/admin-home" element={<AdminHomePage />} />
           <Route exact path="rent" element={<RentLockerPage />} />
           <Route exact path="user-feedback" element={<FeedbackPage />} />
-          <Route path="/admin-dashboard" element={<AdminDashboard />} />
-          <Route path="/admin-locker" element={<AdminLockers />} />
+          <Route exact path="/admin-dashboard" element={<AdminDashboard />} />
+          <Route exact path="/admin-locker" element={<AdminLockers />} />
           <Route exact path="/rent" element={<RentLockerPage />} />
           <Route exact path="/user-feedback" element={<FeedbackPage />} />
           <Route exact path="/locker-form" element={<LockerFormPage />} />
-          <Route path="/admin-location" element={<AdminLocations />} />
+          <Route exact path="/admin-location" element={<AdminLocations />} />
           <Route
             path="*"
             element={<Navigate to="/" />}
