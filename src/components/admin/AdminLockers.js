@@ -5,6 +5,7 @@ import { Context as LockerContext } from '../../context/LockerContext';
 import { Context as LocationContext } from '../../context/LocationContext';
 import LocationDropdown from '../admin/LocationDropdown';
 import AdminNavBar from "./AdminNavBar";
+import AdminMainComponents from "./AdminMainComponents";
 
 const AdminLockers = () => {
     const { state, getLockers} = useContext(LockerContext);
@@ -250,7 +251,9 @@ const AdminLockers = () => {
             <div>
                 <AdminNavBar/>
             </div>
-
+            <div>
+                <AdminMainComponents/>
+            </div>
         <div className="admin-locker">
             <Container>
                 <div className="mb-3">
