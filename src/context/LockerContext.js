@@ -43,8 +43,6 @@ const getLockerById = dispatch => async (id) => {
     try {
         const response = await serverAPI().get('/locker/' + id);
         if (serviceUtil.responseCodeCheck(response.data.code)) {
-            // dispatch({type: 'getLockers', payload: response.data.payload});
-            // console.log(response.data.payload);
             return {payload: response.data.payload}
         } else {
             //fail
@@ -109,6 +107,26 @@ const deleteLockers = dispatch => async (document) => {
         dispatch({
             type: 'add_error',
             payload: 'Unable to delete this lockers'
+        });
+    }
+};
+
+const updateLockerPasscodeById = dispatch => async (id) => {
+    try {
+        const response = await serverAPI().get('/locker/update_passcode/' + id);
+        if (serviceUtil.responseCodeCheck(response.data.code)) {
+            return {payload: response.data.payload}
+        } else {
+            //fail
+            dispatch({
+                type: 'add_error',
+                payload: response.data.msg + response.data.payload 
+            });
+        }
+    } catch (err) {
+        dispatch({
+            type: 'add_error',
+            payload: 'Failed to load locker'
         });
     }
 };

@@ -9,6 +9,7 @@ import RentLockerPage from './pages/RentLockerPage';
 import UserHomePage from './pages/UserHomePage';
 import FeedbackPage from './pages/FeedbackPage';
 import LockerFormPage from './pages/LockerFormPage';
+import ModifyAndStartPage from './pages/ModifyAndStartPage'
 
 
 const App = () => {
@@ -22,6 +23,7 @@ const App = () => {
           <Route exact path="/rent" element={<RentLockerPage />} />
           <Route exact path="/user-feedback" element={<FeedbackPage />} />
           <Route exact path="/locker-form" element={<LockerFormPage />} />
+          <Route exact path="/user-modify" element={<ModifyAndStartPage/>}/>
           <Route
             path="*"
             element={<Navigate to="/" />}
