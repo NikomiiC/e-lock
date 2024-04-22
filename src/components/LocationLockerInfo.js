@@ -120,26 +120,26 @@ const LocationLockerInfo = (locInfo) => {
         }
     }
 
-    const updateBalance = async (cost) => {
-        try {
-            const response = await serverAPI().post("/updateBalance", parseInt(cost)
-            );
-            if (response.data.code === 0) {
-                window.alert("Balance updated successfully")
-            } else {
-                console.error("Failed to update wallet balance:", response.data.msg)
-            }
-        } catch (err) {
-            console.error('Failed to add new transaction:', err);
-            if (err.response) {
-                window.alert(err.response.data.msg);
-            } else if (err.request) {
-                console.error('Request:', err.request);
-            } else {
-                console.error('Error:', err.message);
-            }
-        }
-    }
+    // const updateBalance = async (cost) => {
+    //     try {
+    //         const response = await serverAPI().post("/updateBalance", parseInt(cost)
+    //         );
+    //         if (response.data.code === 0) {
+    //             window.alert("Balance updated successfully")
+    //         } else {
+    //             console.error("Failed to update wallet balance:", response.data.msg)
+    //         }
+    //     } catch (err) {
+    //         console.error('Failed to add new transaction:', err);
+    //         if (err.response) {
+    //             window.alert(err.response.data.msg);
+    //         } else if (err.request) {
+    //             console.error('Request:', err.request);
+    //         } else {
+    //             console.error('Error:', err.message);
+    //         }
+    //     }
+    // }
 
     const addTransaction = async () => {
         try {
@@ -311,7 +311,6 @@ const LocationLockerInfo = (locInfo) => {
             setErrExists(false);
             let res = await addTransaction();
             if (res == "Success") {
-                updateBalance(parseInt(user.balance) - parseInt(finalFees));
                 window.alert("Locker has been booked successfully!");
                 window.location.replace('/user-home');
             }
