@@ -2,6 +2,7 @@ import createDataContext from "./createDataContext";
 import serverAPI from "../api/serverAPI";
 import serviceUtil from "../service/serviceUtil";
 
+
 const transactionReducer = (state, action) => {
     switch (action.type) {
         case 'getTransactions':
@@ -23,6 +24,7 @@ const transactionReducer = (state, action) => {
     }
 };
 
+
 const getTransactions = dispatch => async () => {
     try {
         const response = await serverAPI().get('/all_transactions');
@@ -41,6 +43,7 @@ const getTransactions = dispatch => async () => {
         });
     }
 };
+
 
 const getTransaction = dispatch => async (id) => {
     try {
@@ -68,25 +71,22 @@ const clearErrorMessage = dispatch => () => {
 const addTransaction = dispatch => async (document) => {
     try {
         if (!document) {
-            dispatch({
-                type: 'add_error',
-                payload: 'Please provide required data'
-            });
+            return {payload: "Please provide the required data"}
         }
         const response = await serverAPI().post('/create_transaction', document);
         if (!serviceUtil.responseCodeCheck(response.data.code)) {
-            dispatch({
-                type: 'add_error',
-                payload: response.data.msg
-            });
-        } else {
-            window.location.reload(); // Reload current page
+            return {payload: response.data.msg}
         }
+        else { 
+            return {payload: "Success"}
+        } //reload current page
     } catch (err) {
-        dispatch({
-            type: 'add_error',
-            payload: 'Failed to add transaction, please provide required data'
-        });
+        // dispatch({
+        //     type: 'add_error',
+        //     payload: 'Failed to add transaction, please provide required data'
+        // });
+        window.alert("Booking failed because you have already made a maximum of two bookings per day!");
+        window.location.replace('/user-home');
     }
 };
 
@@ -135,6 +135,7 @@ const updateTransaction = dispatch => async (id, action, document) => {
         });
     }
 };
+
 
 export const {Provider, Context} = createDataContext(
     transactionReducer,

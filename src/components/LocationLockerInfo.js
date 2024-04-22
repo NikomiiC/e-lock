@@ -1,10 +1,11 @@
 import { useState, useEffect, useContext } from 'react';
 import { Container, Button, Table, Row, Col, Card, Form, Alert } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 import { Context as LockerContext } from '../context/LockerContext';
+import { Context as TransactionContext } from '../context/TransactionContext';
+import { Context as PricingContext } from '../context/PricingContext';
 import lockerIcon from '../images/locker.png';
-// import DatePicker from 'react-datepicker';
-// import "react-datepicker/dist/react-datepicker.css";
+import serverAPI from '../api/serverAPI';
 
 
 
@@ -16,18 +17,39 @@ const LocationLockerInfo = (locInfo) => {
     const [displayForm, setDisplayForm] = useState(false);
     const [selectedLocker, setSelectedLocker] = useState([]);
     const [selectedLockerDTSlots, setSelectedLockerDTSlots] = useState([]);
-    const [locStatus, setLocStatus] = useState("");
     const [allSlotsAvail, setAllSlotsAvail] = useState(true);
+    const [priceArr, setPriceArr] = useState([]);
+    const user = JSON.parse(localStorage.getItem('user'));
+    const [errArr, setErrArr] = useState([]);
+    const [errExists, setErrExists] = useState(false);
+    const [toSpliceFromStart, setToSpliceFromStart] = useState([]);
+    const [toSpliceFromEnd, setToSpliceFromEnd] = useState([]);
+    const userId = user._id;
 
     const convertToDateLocalString = (date) => {
         const year = date.getFullYear();
         const month = (date.getMonth() + 1).toString().padStart(2, "0");
         const day = date.getDate().toString().padStart(2, "0");
-        // const hours = date.getHours().toString().padStart(2, "0");
-        // const minutes = date.getMinutes().toString().padStart(2, "0");
 
-        // return `${year}-${month}-${day}T${hours}:${minutes}`;
         return `${year}-${month}-${day}`;
+    }
+
+    const convertToDateWithZeros = (date) => {
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, "0");
+        const day = date.getDate().toString().padStart(2, "0");
+        return `${year}-${month}-${day}T00:00:00`;
+    }
+
+    const convertFullDateTimeString = (date) => {
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, "0");
+        const day = date.getDate().toString().padStart(2, "0");
+        const hours = date.getHours().toString().padStart(2, "0");
+        const minutes = date.getMinutes().toString().padStart(2, "0");
+        const secs = date.getSeconds().toString().padStart(2, "0")
+
+        return `${year}-${month}-${day}T${hours}:${minutes}:${secs}`;
     }
 
     const [date, setDateTime] = useState(() => convertToDateLocalString(new Date()));
@@ -35,6 +57,18 @@ const LocationLockerInfo = (locInfo) => {
     const [endDate, setEndDate] = useState("");
     const [startTime, setStartTime] = useState("");
     const [endTime, setEndTime] = useState("");
+    const [transaction, setTransaction] = useState({
+        user_id: "",
+        locker_id: "",
+        pricing_id: 0,
+        cost: 0,
+        create_datetime: "",
+        latest_update_datetime: "",
+        start_index: 0,
+        end_index: 0,
+        start_date: "",
+        end_date: ""
+    })
     const timeSlotObj = {
         0: '00:00',
         1: '01:00',
@@ -65,11 +99,17 @@ const LocationLockerInfo = (locInfo) => {
     const [filteredStartTimes, setFilteredStartTimes] = useState(timeSlotObj);
     const [filteredEndTimes, setFilteredEndTimes] = useState(timeSlotObj);
 
+    const {
+        getLockers, clearErrorMessageLocker, addLockers, deleteLockers, getLockerById
+    } = useContext(LockerContext);
 
+    // const {
+    //     getAllTransactions, getTransactionsByUser, clearErrorMessageTrans, addTransaction, updateTransactionById
+    // } = useContext(TransactionContext)
 
     const {
-        state, getLockers, clearErrorMessageLocker, addLockers, deleteLockers, getLockerById
-    } = useContext(LockerContext);
+        getAllPricing, getPricingById, clearErrorMessagePrice, addPricing, updatePricingById
+    } = useContext(PricingContext)
 
     async function storeLockerInfo(locId) {
         try {
@@ -78,6 +118,84 @@ const LocationLockerInfo = (locInfo) => {
         } catch (err) {
             console.error(`Error: ${err}`);
         }
+    }
+
+    const updateBalance = async (cost) => {
+        try {
+            const response = await serverAPI().post("/updateBalance", parseInt(cost)
+            );
+            if (response.data.code === 0) {
+                window.alert("Balance updated successfully")
+            } else {
+                console.error("Failed to update wallet balance:", response.data.msg)
+            }
+        } catch (err) {
+            console.error('Failed to add new transaction:', err);
+            if (err.response) {
+                window.alert(err.response.data.msg);
+            } else if (err.request) {
+                console.error('Request:', err.request);
+            } else {
+                console.error('Error:', err.message);
+            }
+        }
+    }
+
+    const addTransaction = async () => {
+        try {
+            const response = await serverAPI().post("/create_transaction", transaction);
+            if (response.data.code === 0) {
+                return "Success";
+            } else {
+                console.error("Failed to add new transaction:", response.data.msg)
+            }
+        } catch (err) {
+            console.error('Failed to add new transaction:', err);
+            if (err.response) {
+                window.alert(err.response.data.msg);
+            } else if (err.request) {
+                console.error('Request:', err.request);
+            } else {
+                console.error('Error:', err.message);
+            }
+        }
+    }
+
+    async function getLockerPrices() {
+        try {
+            let priceRes = await getAllPricing();
+            setPriceArr(priceRes.prices);
+        } catch (err) {
+            console.error(`Error: ${err}`)
+        }
+    }
+
+    const getLocPriceId = (locSize) => {
+        for (let priceObj of priceArr) {
+            if (locSize == priceObj.name) {
+                return [priceObj._id, priceObj.first_hour, priceObj.follow_up];
+            }
+        }
+    }
+
+    const calculateDays = (start, end) => {
+        const startDt = new Date(start);
+        const endingDt = new Date(end);
+        const timeDiff = endingDt.getTime() - startDt.getTime();
+        const daysDiff = timeDiff / (1000 * 60 * 60 * 24);
+        return Math.round(daysDiff);
+    }
+
+    const calculateFees = (hours, startingFee, subSeqFee) => {
+        let final = 0;
+        for (let h = 1; h <= hours; h++) {
+            if (h == 1) {
+                final += startingFee;
+            } else {
+                final += subSeqFee;
+            }
+        }
+        return final;
     }
 
     const toggleForm = (selectedLoc) => {
@@ -100,13 +218,13 @@ const LocationLockerInfo = (locInfo) => {
     const getTimeSlots = (userDateInputs, bookingsObj) => {
         setFilteredStartTimes(timeSlotObj);
         setFilteredEndTimes(timeSlotObj);
+        setToSpliceFromStart([]);
+        setToSpliceFromEnd([]);
         if (bookingsObj.length < 1) {
             setAllSlotsAvail(true);
         } else {
             setAllSlotsAvail(false);
             const dateInputs = [convertToDateLocalString(new Date(userDateInputs[0])), convertToDateLocalString(new Date(userDateInputs[1]))];
-            let toSpliceFromStart = []; // Looks smth like [1,2,3] -- Which shows that user booked from 1 am - 3 am telling me where I need to splice till
-            let toSpliceFromEnd = [];
             for (let booking of bookingsObj) {
                 console.log(convertToDateLocalString(new Date(booking.Date)), booking.Timeslots);
                 // get remaining start times based on start date's slots
@@ -140,13 +258,76 @@ const LocationLockerInfo = (locInfo) => {
         }
     }
 
+    async function handleSubmit(event) {
+        event.preventDefault();
+        setErrArr([]);
+        let err = []
+        let startD = convertToDateWithZeros(new Date(document.getElementById('startDT').value));
+        let endD = convertToDateWithZeros(new Date(document.getElementById('endDT').value));
+        if (new Date(endD) < new Date(startD)) {
+            err.push("End date cannot be earlier than start date.")
+        }
+
+        let startTime = parseInt(document.getElementById('startTime').value);
+        let endTime = parseInt(document.getElementById('endTime').value);
+
+        // Implement checker for timing to ensure it does not pass timings that are part of existing booked timeslots
+        if (new Date(endD) == new Date(startD) && endTime < startTime) {
+            err.push("End time cannot be earlier than start time for the same day.");
+        }
+        let priceDetails = getLocPriceId(selectedLocker.locker.size);
+        let numOfBookedDays = calculateDays(startD, endD);
+        let numOfHoursToCharge = 0;
+        if (numOfBookedDays == 1) {
+            numOfHoursToCharge = endTime + (24 - startTime);
+        } else if (numOfBookedDays > 1) {
+            numOfHoursToCharge = endTime + (24 - startTime) + (24 * (numOfBookedDays - 1));
+        } else {
+            numOfHoursToCharge = endTime - startTime;
+        }
+        let finalFees = calculateFees(numOfHoursToCharge, priceDetails[1], priceDetails[2]);
+
+        if (parseInt(user.balance) < parseInt(finalFees)) {
+            err.push(`Booking failed because current booking fees are ${parseFloat(finalFees).toFixed(2)} while you only have ${parseFloat(user.balance).toFixed(2)} in your account's wallet.`)
+        }
+
+        let userConfirm = window.confirm(`Booking fee amounts to $${parseInt(finalFees).toFixed(2)}, and you currently have $${parseInt(user.balance).toFixed(2)} in your wallet. Proceed with booking?`)
+
+        transaction.user_id = userId;
+        transaction.locker_id = selectedLocker.locker._id;
+        transaction.pricing_id = priceDetails[0];
+        transaction.cost = finalFees;
+        transaction.create_datetime = convertFullDateTimeString(new Date());
+        transaction.latest_update_datetime = convertFullDateTimeString(new Date());
+        transaction.start_index = startTime;
+        transaction.end_index = endTime;
+        transaction.start_date = startD;
+        transaction.end_date = endD;
+
+        if (err.length > 0) {
+            setErrExists(true);
+            setErrArr(err);
+        } else if (err.length < 1 && userConfirm) {
+            setErrExists(false);
+            let res = await addTransaction();
+            if (res == "Success") {
+                updateBalance(parseInt(user.balance) - parseInt(finalFees));
+                window.alert("Locker has been booked successfully!");
+                window.location.replace('/user-home');
+            }
+        }
+
+    }
+
     useEffect(() => {
         if (initialLoad) {
+            getLockerPrices();
             for (let locker of locationInfo.locker_list) {
                 storeLockerInfo(locker);
             }
             setInitialLoad(false)
         }
+
 
         if (startDate != "" && endDate != "") {
             getTimeSlots([startDate, endDate], selectedLockerDTSlots);
@@ -184,20 +365,36 @@ const LocationLockerInfo = (locInfo) => {
                     }
                 </Row>
             </Container>
+
+            {
+                errExists ? (
+                    <Container className='headerComponentSpace'>
+                        <Alert variant='danger'>
+                            <ul>
+                                {
+                                    errArr.map(err => (
+                                        <li className='fw-bold'>{err}</li>
+                                    ))
+                                }
+                            </ul>
+                        </Alert>
+                    </Container>
+                ) : (<></>)
+            }
             {
                 displayForm ? (
                     <Container className='headerComponentSpace'>
-                        <h2 className='my-3 text-center'>Rental Form</h2>
-                        <Form>
+                        <h2 className='text-center'>Rental Form</h2>
+                        <Form id='lockerForm' onSubmit={handleSubmit}>
                             <Row className='my-3'>
                                 <Col lg="6" md="12">
-                                    <Form.Group className='mb-3'>
+                                    <Form.Group>
                                         <Form.Label className='fw-bold'>Start Date:</Form.Label> <br />
-                                        <Form.Control id="startDT" onChange={(e) => setStartDate(new Date(e.target.value))} min={date} type="date" />
+                                        <Form.Control required id="startDT" onChange={(e) => setStartDate(new Date(e.target.value))} min={date} type="date" />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6" md="12">
-                                    <Form.Group className='mb-3'>
+                                    <Form.Group>
                                         <Form.Label className='fw-bold'>End Date:</Form.Label> <br />
                                         <Form.Control required id="endDT" onChange={(e) => setEndDate(new Date(e.target.value))} min={date} type="date" />
                                     </Form.Group>
@@ -205,7 +402,7 @@ const LocationLockerInfo = (locInfo) => {
                             </Row>
                             <Row className='my-3'>
                                 <Col lg="6" md="12">
-                                    <Form.Group className='mb-3'>
+                                    <Form.Group>
                                         <Form.Label className='fw-bold'>Start Time:</Form.Label> <br />
                                         <Form.Select id="startTime" onChange={(e) => setStartTime(e.target.value)}>
                                             <option></option>
@@ -220,7 +417,7 @@ const LocationLockerInfo = (locInfo) => {
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6" md="12">
-                                    <Form.Group className='mb-3'>
+                                    <Form.Group>
                                         <Form.Label className='fw-bold'>End Time:</Form.Label> <br />
                                         <Form.Select required id="endTime" onChange={(e) => setEndTime(e.target.value)}>
                                             <option></option>
@@ -236,21 +433,18 @@ const LocationLockerInfo = (locInfo) => {
                                 </Col>
                             </Row>
                             <Row className='my-3'>
-                                <Col lg="6" md="12">
-                                    <Form.Group className='mb-3'>
+                                <Col lg="12">
+                                    <Form.Group>
                                         <Form.Label className='fw-bold'>Locker Size:</Form.Label> <br />
                                         <Form.Control disabled="true" id="locSize" value={selectedLocker.locker.size} type="text" />
                                     </Form.Group>
                                 </Col>
-
-                                <Col lg="6" md="12">
-                                    <Form.Group className='mb-3'>
-                                        <Form.Label className='fw-bold'>Set Passcode:</Form.Label> <br />
-                                        <Form.Control required id="locPasscode" type="number" placeholder='e.g. 000000' />
-                                    </Form.Group>
+                            </Row>
+                            <Row>
+                                <Col sm="12">
+                                    <Button style={{ float: "right" }} variant='info' type='submit'>Submit</Button>
                                 </Col>
                             </Row>
-                            <Button className='mt-4' style={{ float: "right" }} variant='info'>Submit</Button>
                         </Form>
                     </Container>
                 ) : (<></>)

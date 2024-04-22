@@ -16,6 +16,7 @@ import AdminLocations from "./components/admin/AdminLocations"
 import AdminMainComponents from "./components/admin/AdminMainComponents";
 import AdminNavBar from "./components/admin/AdminNavBar";
 import LockerFormPage from './pages/LockerFormPage';
+import ModifyAndStartPage from './pages/ModifyAndStartPage'
 
 const App = () => {
 
@@ -34,7 +35,9 @@ const App = () => {
           <Route exact path="/rent" element={<RentLockerPage />} />
           <Route exact path="/user-feedback" element={<FeedbackPage />} />
           <Route exact path="/locker-form" element={<LockerFormPage />} />
+          <Route exact path="/user-modify" element={<ModifyAndStartPage/>}/>
           <Route exact path="/admin-location" element={<AdminLocations />} />
+
           <Route
             path="*"
             element={<Navigate to="/" />}
