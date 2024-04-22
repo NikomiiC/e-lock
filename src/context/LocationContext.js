@@ -2,16 +2,17 @@ import createDataContext from "./createDataContext";
 import serverAPI from "../api/serverAPI";
 import serviceUtil from "../service/serviceUtil";
 
-const locationReducer = (state, action) => { 
+const locationReducer = (locationState, action) => {
     switch (action.type) {
         case 'getLocations':
             return { errorMessage: '', result: action.payload };
         case 'add_error':
-            return { ...state, errorMessage: action.payload };
+
+            return { ...locationState, errorMessage: action.payload };
         case 'clear_error_message':
-            return { ...state, errorMessage: '' };
+            return { ...locationState, errorMessage: '' };
         default:
-            return state;
+            return locationState;
     }
 };
 
@@ -37,11 +38,9 @@ const getLocations = dispatch => async () => {
 
 const getLocationById = dispatch => async (id) => {
     try {
-        // console.log(id);
-        const response = await serverAPI().get('/location/' + id);
+        const response = await serverAPI().get(`/location/${id}`);
         if (serviceUtil.responseCodeCheck(response.data.code)) {
             dispatch({ type: 'getLocation', payload: response.data.payload });
-            console.log(response.data.payload);
         } else {
             dispatch({
                 type: 'add_error',
@@ -143,3 +142,4 @@ export const { Provider, Context } = createDataContext(
     { getLocations, clearErrorMessage, addLocation, deleteLocation, getLocationById, updateLocation, getLocByLonLat }, //todo: actions, implement functions and add to exports function name
     { errorMessage: '', result: null } // initial state
 );
+

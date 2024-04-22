@@ -2,24 +2,34 @@ import createDataContext from "./createDataContext";
 import serverAPI from "../api/serverAPI";
 import serviceUtil from "../service/serviceUtil";
 
-const transactionReducer = (state, action) => { //todo: to interact with components, basically the state changing. Actually u can reuse same type for different function(meaning in functions dispatch same case ** see comments in getLocker function around line 52, i am just put here for better understanding), as long as their return object are the same. ie, 'getLockers', 'getLocker', 'addLockers', 'deleteLockers'
+
+const transactionReducer = (state, action) => {
     switch (action.type) {
         case 'getTransactions':
-            return { errorMessage: '', result: action.payload };
+            return {errorMessage: '', result: action.payload};
+        case 'getTransaction':
+            return {errorMessage: '', result: action.payload};
+        case 'addTransaction':
+            return {errorMessage: '', result: action.payload};
+        case 'deleteTransaction':
+            return {errorMessage: '', result: action.payload};
+        case 'updateTransaction':
+            return {errorMessage: '', result: action.payload};
         case 'add_error':
-            return { ...state, errorMessage: action.payload };
+            return {...state, errorMessage: action.payload};
         case 'clear_error_message':
-            return { ...state, errorMessage: '' };
+            return {...state, errorMessage: ''};
         default:
             return state;
     }
 };
 
-const getAllTransactions = dispatch => async () => {
+
+const getTransactions = dispatch => async () => {
     try {
         const response = await serverAPI().get('/all_transactions');
         if (serviceUtil.responseCodeCheck(response.data.code)) {
-            return { payload: response.data.payload }
+            dispatch({type: 'getTransactions', payload: response.data.payload});
         } else {
             dispatch({
                 type: 'add_error',
@@ -34,17 +44,12 @@ const getAllTransactions = dispatch => async () => {
     }
 };
 
-const getTransactionsByUser = dispatch => async (id, status) => {
+
+const getTransaction = dispatch => async (id) => {
     try {
-        const response = await serverAPI().get('/user_all_transactions', {
-            params: {
-                status: status,
-                user_id: id
-            }
-        });
+        const response = await serverAPI().get('/all_transactions');
         if (serviceUtil.responseCodeCheck(response.data.code)) {
-            dispatch({type: 'getTransactions', payload: response.data.payload});
-            console.log(response.data.payload);
+            dispatch({type: 'getTransaction', payload: response.data.payload});
         } else {
             dispatch({
                 type: 'add_error',
@@ -54,13 +59,13 @@ const getTransactionsByUser = dispatch => async (id, status) => {
     } catch (err) {
         dispatch({
             type: 'add_error',
-            payload: "Failed to load user's transactions"
+            payload: 'Failed to load transaction'
         });
     }
 };
 
-const clearErrorMessageTrans = dispatch => () => {
-    dispatch({ type: 'clear_error_message' })
+const clearErrorMessage = dispatch => () => {
+    dispatch({type: 'clear_error_message'})
 }
 
 const addTransaction = dispatch => async (document) => {
@@ -85,9 +90,38 @@ const addTransaction = dispatch => async (document) => {
     }
 };
 
-const updateTransactionById = dispatch => async (id) => {
+const deleteTransaction = dispatch => async (id) => {
     try {
-        const response = await serverAPI().post('/update_location' + id);
+        if (!id) {
+            dispatch({
+                type: 'add_error',
+                payload: 'Unable to delete'
+            });
+        }
+        const response = await serverAPI().delete('/delete_transaction' + id);
+        if (!serviceUtil.responseCodeCheck(response.data.code)) {
+            dispatch({
+                type: 'add_error',
+                payload: response.data.msg + response.data.payload
+            });
+        }
+    } catch (err) {
+        dispatch({
+            type: 'add_error',
+            payload: 'Unable to delete this transaction'
+        });
+    }
+};
+
+const updateTransaction = dispatch => async (id, action, document) => {
+    try {
+        if (!id || !action || !document) {
+            dispatch({
+                type: 'add_error',
+                payload: 'Unable to update'
+            });
+        }
+        const response = await serverAPI().post(`/update_transaction/${id}`, { action, doc: document });
         if (!serviceUtil.responseCodeCheck(response.data.code)) {
             dispatch({
                 type: 'add_error',
@@ -102,8 +136,9 @@ const updateTransactionById = dispatch => async (id) => {
     }
 };
 
-export const { Provider, Context } = createDataContext(
-    transactionReducer, //reducer
-    { getAllTransactions, getTransactionsByUser, clearErrorMessageTrans, addTransaction, updateTransactionById }, //todo: actions, implement functions and add to exports function name
-    { errorMessage: '', result: null } // initial state
+
+export const {Provider, Context} = createDataContext(
+    transactionReducer,
+    {getTransactions, clearErrorMessage, addTransaction, deleteTransaction, updateTransaction, getTransaction},
+    {errorMessage: '', result: null}
 );
